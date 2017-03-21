@@ -16,25 +16,25 @@ import retrofit2.Response;
 
 
 public class CharacterModelImpl implements CharacterModel {
-    private Context context;
-    private RemoteListCallback listRequestCallback;
-    private CharactersTable characterTable;
+    private static CharacterModelImpl model;
 
-    public CharacterModelImpl(Context context, RemoteListCallback listRequestCallback) {
-        this.context = context;
-        this.listRequestCallback = listRequestCallback;
-        characterTable = new CharactersTable(context);
+    public static CharacterModelImpl getInstance(){
+        if(model == null) model = new CharacterModelImpl();
+        return model;
     }
 
+    private CharacterModelImpl(){}
+
     @Override
-    public void getCharactersList(int page, int size){
+    public void getCharactersList(int page, int size, Context context, ResultListCallback listRequestCallback){
+        CharactersTable characterTable = new CharactersTable(context);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
         if(dataSource.equals("remote")){
             App.getApi().getData(page,size).enqueue(new Callback<List<Character>>() {
                 @Override
                 public void onResponse(Call<List<Character>> call, Response<List<Character>> response) {
-                    listRequestCallback.onRemoteRequest(response.body());
+                    listRequestCallback.onListRequest(response.body());
                 }
 
                 @Override
@@ -43,6 +43,6 @@ public class CharacterModelImpl implements CharacterModel {
                 }
             });
         }
-        else listRequestCallback.onRemoteRequest(characterTable.getCharactersFromDB());
+        else listRequestCallback.onListRequest(characterTable.getCharactersFromDB());
     }
 }

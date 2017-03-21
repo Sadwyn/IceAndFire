@@ -1,20 +1,14 @@
 package com.sadwyn.iceandfire.presenters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 
 import com.sadwyn.iceandfire.CharacterView;
-import com.sadwyn.iceandfire.Constants;
-import com.sadwyn.iceandfire.MainActivity;
-import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.models.RemoteListCallback;
+import com.sadwyn.iceandfire.models.ResultListCallback;
 
 import org.parceler.Parcels;
 
@@ -25,10 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class CharactersListPresenter extends BasePresenter implements RemoteListCallback{
+public class CharactersListPresenter extends BasePresenter implements ResultListCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
     public static final String LIST_KEY = "LIST_KEY";
@@ -40,14 +32,15 @@ public class CharactersListPresenter extends BasePresenter implements RemoteList
     private int page;
 
     private Call<List<Character>> call;
-
+    Context context;
     private CharacterModelImpl characterModel;
 
     private CharacterView characterFragmentView;
 
     public CharactersListPresenter(Context context, CharacterView characterFragmentView) {
+        this.context = context;
         this.characterFragmentView = characterFragmentView;
-        this.characterModel = new CharacterModelImpl(context, this);
+        this.characterModel = CharacterModelImpl.getInstance();
         initializeData();
     }
 
@@ -60,7 +53,7 @@ public class CharactersListPresenter extends BasePresenter implements RemoteList
     public void onViewCreated(View view, Bundle bundle) {
         if(getList().isEmpty()) {
             if (bundle == null)
-                characterModel.getCharactersList(page, size);
+                characterModel.getCharactersList(page, size, view.getContext(), this);
             else restoreData(bundle);
         }
     }
@@ -101,14 +94,11 @@ public class CharactersListPresenter extends BasePresenter implements RemoteList
 
     public void addNewData() {
         page++;
-        characterModel.getCharactersList(page, size);
+        characterModel.getCharactersList(page, size, context, this );
     }
-
 
     @Override
-    public void onRemoteRequest(List<Character> characters) {
+    public void onListRequest(List<Character> characters) {
         setInfoToView(characters, false);
     }
-
-
 }
