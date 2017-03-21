@@ -1,0 +1,112 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'io.fabric'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+
+android {
+    signingConfigs {
+        config {
+            keyAlias properties.getProperty('keyAlias')
+            keyPassword properties.getProperty('keyPassword')
+            storeFile file(properties.getProperty('storeFile'))
+            storePassword properties.getProperty('storePassword')
+        }
+    }
+
+
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.sadwyn.iceandfire"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        demo {
+            versionNameSuffix "-demo"
+            signingConfig signingConfigs.config
+        }
+        pro {
+            versionNameSuffix "-full"
+            signingConfig signingConfigs.config
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
+    }
+}
+buildscript{
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.22.1'
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+repositories{
+    mavenCentral()
+}
+
+dependencies {
+    ext.supportVersion = "25.2.0"
+    ext.retrofitVersion = "2.1.0"
+    ext.butterKnifeVersion = "8.5.1"
+    ext.parcelerVersion = "1.1.6"
+    ext.glideVersion = "3.7.0"
+    ext.logInterceptorVersion = "3.3.1"
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    compile "com.android.support:support-annotations:$supportVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+    compile "org.parceler:parceler-api:$parcelerVersion"
+    annotationProcessor "org.parceler:parceler:$parcelerVersion"
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:percent:$supportVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.android.support:support-v4:$supportVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$logInterceptorVersion"
+    compile "com.android.support:preference-v7:$supportVersion"
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar')
+    {
+        transitive = true;
+    }
+}

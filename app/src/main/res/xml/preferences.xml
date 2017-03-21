@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:title="@string/language_title"
+        android:entries="@array/languages"
+        android:entryValues="@array/languages_values"
+        android:key="@string/languages_list_key" />
+    <ListPreference
+        android:title="@string/source_type_title"
+        android:entries="@array/data_sources"
+        android:entryValues="@array/data_sources_values"
+        android:key="@string/data_sources_key"/>
+</PreferenceScreen>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>@string/english_title</item>
+        <item>@string/russian_title</item>
+    </string-array>
+    <string-array name="languages_values">
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="data_sources">
+        <item>@string/local_data_source_title</item>
+        <item>@string/remote_data_source_title</item>
+    </string-array>
+
+    <string-array name="data_sources_values">
+        <item>local</item>
+        <item>remote</item>
+    </string-array>
+
+</resources>

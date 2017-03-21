@@ -1,0 +1,48 @@
+package com.sadwyn.iceandfire.models;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
+
+import com.sadwyn.iceandfire.App;
+import com.sadwyn.iceandfire.Constants;
+import com.sadwyn.iceandfire.data.CharactersTable;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class CharacterModelImpl implements CharacterModel {
+    private Context context;
+    private RemoteListCallback listRequestCallback;
+    private CharactersTable characterTable;
+
+    public CharacterModelImpl(Context context, RemoteListCallback listRequestCallback) {
+        this.context = context;
+        this.listRequestCallback = listRequestCallback;
+        characterTable = new CharactersTable(context);
+    }
+
+    @Override
+    public void getCharactersList(int page, int size){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
+        if(dataSource.equals("remote")){
+            App.getApi().getData(page,size).enqueue(new Callback<List<Character>>() {
+                @Override
+                public void onResponse(Call<List<Character>> call, Response<List<Character>> response) {
+                    listRequestCallback.onRemoteRequest(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Character>> call, Throwable t) {
+
+                }
+            });
+        }
+        else listRequestCallback.onRemoteRequest(characterTable.getCharactersFromDB());
+    }
+}
