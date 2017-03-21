@@ -5,6 +5,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.sadwyn.iceandfire.models.Character;
 
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_BORN;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_DEAD;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_FATHER;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_GENDER;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_KINGDOM;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_MOTHER;
+import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_NAME;
+
 public class SaveToDbThread implements Runnable {
 
     private Character character;
@@ -23,16 +31,22 @@ public class SaveToDbThread implements Runnable {
     private void insertCharacter(Character character) {
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(HeroesDataContract.TableStructure.COLUMN_NAME, character.getName());
-        values.put(HeroesDataContract.TableStructure.COLUMN_BORN, character.getBorn());
-        values.put(HeroesDataContract.TableStructure.COLUMN_KINGDOM, character.getCulture());
-        values.put(HeroesDataContract.TableStructure.COLUMN_GENDER, character.getGender());
-        values.put(HeroesDataContract.TableStructure.COLUMN_FATHER, character.getFather());
-        values.put(HeroesDataContract.TableStructure.COLUMN_MOTHER, character.getMother());
-        values.put(HeroesDataContract.TableStructure.COLUMN_DEAD, character.getDied());
+        values.put(COLUMN_NAME, character.getName());
+        values.put(COLUMN_BORN, character.getBorn());
+        values.put(COLUMN_KINGDOM, character.getCulture());
+        values.put(COLUMN_GENDER, character.getGender());
+        values.put(COLUMN_FATHER, character.getFather());
+        values.put(COLUMN_MOTHER, character.getMother());
+        values.put(COLUMN_DEAD, character.getDied());
 
-        int id = (int) writableDatabase.insert(HeroesDataContract.TableStructure.TABLE_NAME, null, values);
-        
+        int id = (int) writableDatabase.insert(HeroesDataContract.MainDataStructure.TABLE_NAME, null, values);
+
+        ContentValues aliases = new ContentValues();
+        for (String alias : character.getAliases()) {
+            aliases.put(HeroesDataContract.AliasesStructure.COLUMN_NICKNAME, alias);
+            aliases.put(HeroesDataContract.AliasesStructure.OUTER_KEY, id);
+            writableDatabase.insert(HeroesDataContract.AliasesStructure.TABLE_NAME, null, aliases);
+        }
         writableDatabase.close();
     }
 }

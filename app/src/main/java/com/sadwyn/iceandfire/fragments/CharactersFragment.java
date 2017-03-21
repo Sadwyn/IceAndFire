@@ -70,6 +70,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
         adapter = new CharactersAdapter(presenter.getList(), callback);
         presenter.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
          if(isRemoteStorage()) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 recyclerView.setOnScrollChangeListener((view12, i, i1, i2, i3) -> {
@@ -97,6 +98,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
                 new GridLayoutManager(getActivity().getApplicationContext(), DEFAULT_SPAN_COUNT) : new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
     }
 
     private boolean isRemoteStorage() {

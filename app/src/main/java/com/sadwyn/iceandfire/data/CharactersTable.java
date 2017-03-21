@@ -28,7 +28,7 @@ public class CharactersTable {
     private boolean isHeroAlreadySaved(Character character) {
         String name = "";
         SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT * FROM heroes where name = '"+character.getName()+"'";
+        String selectQuery = "SELECT * FROM heroes WHERE name = '"+character.getName()+"'";
         Cursor c = readableDatabase.rawQuery(selectQuery, null);
         if(c.moveToFirst())
             name = c.getString(c.getColumnIndex("name"));
@@ -42,17 +42,18 @@ public class CharactersTable {
         SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
 
         String[] projection = {
-                HeroesDataContract.TableStructure.COLUMN_NAME,
-                HeroesDataContract.TableStructure.COLUMN_BORN,
-                HeroesDataContract.TableStructure.COLUMN_KINGDOM,
-                HeroesDataContract.TableStructure.COLUMN_GENDER,
-                HeroesDataContract.TableStructure.COLUMN_FATHER,
-                HeroesDataContract.TableStructure.COLUMN_MOTHER,
-                HeroesDataContract.TableStructure.COLUMN_DEAD,
+                HeroesDataContract.MainDataStructure._ID,
+                HeroesDataContract.MainDataStructure.COLUMN_NAME,
+                HeroesDataContract.MainDataStructure.COLUMN_BORN,
+                HeroesDataContract.MainDataStructure.COLUMN_KINGDOM,
+                HeroesDataContract.MainDataStructure.COLUMN_GENDER,
+                HeroesDataContract.MainDataStructure.COLUMN_FATHER,
+                HeroesDataContract.MainDataStructure.COLUMN_MOTHER,
+                HeroesDataContract.MainDataStructure.COLUMN_DEAD,
         };
 
         Cursor cursor = readableDatabase.query(
-                HeroesDataContract.TableStructure.TABLE_NAME,
+                HeroesDataContract.MainDataStructure.TABLE_NAME,
                 projection,
                 null,
                 null,
@@ -60,16 +61,18 @@ public class CharactersTable {
                 null,
                 null);
 
-        int nameColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_NAME);
-        int bornColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_BORN);
-        int kingdomColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_KINGDOM);
-        int genderColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_GENDER);
-        int fatherColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_FATHER);
-        int motherColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_MOTHER);
-        int deadColumnIndex = cursor.getColumnIndex(HeroesDataContract.TableStructure.COLUMN_DEAD);
+        int idColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure._ID);
+        int nameColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_NAME);
+        int bornColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_BORN);
+        int kingdomColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_KINGDOM);
+        int genderColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_GENDER);
+        int fatherColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_FATHER);
+        int motherColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_MOTHER);
+        int deadColumnIndex = cursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_DEAD);
 
         try {
             while (cursor.moveToNext()) {
+                int id = cursor.getInt(idColumnIndex);
                 String name = cursor.getString(nameColumnIndex);
                 String born = cursor.getString(bornColumnIndex);
                 String kingdom = cursor.getString(kingdomColumnIndex);
@@ -77,6 +80,14 @@ public class CharactersTable {
                 String father = cursor.getString(fatherColumnIndex);
                 String mother = cursor.getString(motherColumnIndex);
                 String dead = cursor.getString(deadColumnIndex);
+
+                ArrayList<String> aliases = new ArrayList<>();
+                String selectQuery = "SELECT * FROM aliases WHERE outer = '"+id+"'";
+                Cursor c = readableDatabase.rawQuery(selectQuery, null);
+                while (c.moveToNext())
+                    aliases.add(c.getString(c.getColumnIndex("nickname")));
+                c.close();
+
 
                 Character character = new Character();
                 character.setName(name);
@@ -86,8 +97,8 @@ public class CharactersTable {
                 character.setFather(father);
                 character.setMother(mother);
                 character.setDied(dead);
+                character.setAliases(aliases);
                 result.add(character);
-                Log.i("TAG", "name " + character.getName());
             }
         }
         finally {

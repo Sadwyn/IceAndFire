@@ -80,10 +80,10 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        /*if(!character.getAliases().isEmpty())
-            aliases.setText(R.string.aliases);*/
-       /* DetailsAdapter adapter = new DetailsAdapter(character.getAliases());
-        recyclerView.setAdapter(adapter);*/
+        if(!character.getAliases().isEmpty())
+            aliases.setText(R.string.aliases);
+        DetailsAdapter adapter = new DetailsAdapter(character.getAliases());
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
