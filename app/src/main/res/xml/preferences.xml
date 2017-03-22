@@ -11,4 +11,7 @@
         android:entries="@array/data_sources"
         android:entryValues="@array/data_sources_values"
         android:key="@string/data_sources_key"/>
+    <Preference
+        android:title="@string/exportDataButtonTitle"
+        android:key="@string/exportButtonKey" />
 </PreferenceScreen>

@@ -22,10 +22,18 @@
         <activity android:name=".MainActivity">
 
         </activity>
+
+        <service
+            android:name=".ExportDataService"
+            android:enabled="true"
+            >
+        </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2a06c4bf707bb6c6dc90a0fd9403ab108032d963"
             />
+
     </application>
 
 </manifest>

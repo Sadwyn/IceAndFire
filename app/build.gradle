@@ -89,6 +89,7 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile group: 'net.sf.opencsv', name: 'opencsv', version: '2.3'
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.jakewharton:butterknife:$butterKnifeVersion"

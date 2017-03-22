@@ -17,4 +17,6 @@
     <string name="source_type_title">Data Source</string>
     <string name="languages_list_key" translatable="false">languages_list</string>
     <string name="data_sources_key" translatable="false">data_sources</string>
+    <string name="exportDataButtonTitle">Export From Database</string>
+    <string name="exportButtonKey" translatable="false">exportButtonKey</string>
 </resources>

@@ -15,6 +15,5 @@ public static final long SPLASH_DELAY = 2000;
             startActivity(intent);
             finish();
         }, SPLASH_DELAY);
-
     }
 }

@@ -18,9 +18,14 @@ import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.fragments.SettingsFragment;
 import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.models.CharacterModelImpl;
+import com.sadwyn.iceandfire.models.ResultListCallback;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
 
+import org.parceler.Parcels;
+
+import java.util.List;
 import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
@@ -28,9 +33,9 @@ import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
 
-public class MainActivity extends AppCompatActivity implements ContentFragmentCallback, ChangeLanguageCallBack, SourceChangeCallBack {
-
-
+public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
+        ChangeLanguageCallBack,
+        SourceChangeCallBack {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         setContentView(R.layout.activity_main);
         restoreSavedLocale();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
-
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
     }
@@ -98,6 +102,5 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         FragmentManager manager = getSupportFragmentManager();
         CharactersFragment charactersFragment = (CharactersFragment)manager.findFragmentByTag(CHARACTERS_FRAGMENT_TAG);
         charactersFragment.getPresenter().initializeData();
-
     }
 }
