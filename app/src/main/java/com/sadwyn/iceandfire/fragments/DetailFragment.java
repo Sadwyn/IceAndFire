@@ -16,6 +16,7 @@ import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.data.CharactersTable;
 import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 
@@ -65,8 +66,8 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
         backgroundPresenter.onViewCreated(view,savedInstanceState);
         if (character != null) {
             initializeData();
-            CharactersTable charactersTable = new CharactersTable(getContext());
-            charactersTable.saveCharacterToDB(character);
+            CharacterModelImpl model = CharacterModelImpl.getInstance();
+            model.saveCharacterToDB(character, view.getContext());
         }
     }
 

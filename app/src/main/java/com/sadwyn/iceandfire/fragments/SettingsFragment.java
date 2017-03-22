@@ -28,7 +28,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             callBack = (MainActivity)context;
             sourceChangeCallBack = (MainActivity)context;
         }
-
     }
 
     @Override
@@ -42,7 +41,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
 
     }
 
-    public void saveToPref(String key, String lang)
+    public void saveOneStringToPref(String key, String lang)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
@@ -67,7 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                     String lang = (String)newValue;
                     Locale newLocale = new Locale(lang);
                     LocaleUtils.setLocale(getContext(),newLocale);
-                    saveToPref(LANG_PREF ,lang);
+                    saveOneStringToPref(LANG_PREF ,lang);
                     callBack.changeLanguage();
                 }
                 return true;
@@ -79,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                 if(!newValue.equals(dataSourcePreferences.getValue())) {
                     String sourceValue = (String)newValue;
                     dataSourcePreferences.setValue((String) newValue);
-                    saveToPref(DATA_SOURCE_PREF, sourceValue);
+                    saveOneStringToPref(DATA_SOURCE_PREF, sourceValue);
                     sourceChangeCallBack.onSourceChanged();
                 }
                 return false;

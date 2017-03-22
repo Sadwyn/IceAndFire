@@ -6,6 +6,7 @@
         android:entryValues="@array/languages_values"
         android:key="@string/languages_list_key" />
     <ListPreference
+        android:defaultValue="remote"
         android:title="@string/source_type_title"
         android:entries="@array/data_sources"
         android:entryValues="@array/data_sources_values"

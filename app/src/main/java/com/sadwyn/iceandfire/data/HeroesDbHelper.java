@@ -15,6 +15,11 @@ public class HeroesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        createDB(db);
+        updateDBtoSecondVersion(db);
+    }
+
+    private void createDB(SQLiteDatabase db) {
         String SQL_CREATE_HEROES_TABLE = "CREATE TABLE " + HeroesDataContract.MainDataStructure.TABLE_NAME + " ("
                 + HeroesDataContract.MainDataStructure._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + HeroesDataContract.MainDataStructure.COLUMN_NAME + " TEXT NOT NULL, "
@@ -31,12 +36,16 @@ public class HeroesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if(newVersion == 2){
-            String SQL_CREATE_ALIASES_TABLE = "CREATE TABLE " + HeroesDataContract.AliasesStructure.TABLE_NAME + " ("
-                    + HeroesDataContract.AliasesStructure._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + HeroesDataContract.AliasesStructure.OUTER_KEY + " INTEGER, "
-                    + HeroesDataContract.AliasesStructure.COLUMN_NICKNAME + " TEXT);";
-
-            db.execSQL(SQL_CREATE_ALIASES_TABLE);
+            updateDBtoSecondVersion(db);
         }
+    }
+
+    private void updateDBtoSecondVersion(SQLiteDatabase db) {
+        String SQL_CREATE_ALIASES_TABLE = "CREATE TABLE " + HeroesDataContract.AliasesStructure.TABLE_NAME + " ("
+                + HeroesDataContract.AliasesStructure._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + HeroesDataContract.AliasesStructure.OUTER_KEY + " INTEGER, "
+                + HeroesDataContract.AliasesStructure.COLUMN_NICKNAME + " TEXT);";
+
+        db.execSQL(SQL_CREATE_ALIASES_TABLE);
     }
 }

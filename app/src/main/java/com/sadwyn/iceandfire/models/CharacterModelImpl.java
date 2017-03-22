@@ -7,6 +7,7 @@ import android.support.v7.preference.PreferenceManager;
 import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.data.CharactersTable;
+import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
 
 import java.util.List;
 
@@ -26,23 +27,32 @@ public class CharacterModelImpl implements CharacterModel {
     private CharacterModelImpl(){}
 
     @Override
-    public void getCharactersList(int page, int size, Context context, ResultListCallback listRequestCallback){
-        CharactersTable characterTable = new CharactersTable(context);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
-        if(dataSource.equals("remote")){
-            App.getApi().getData(page,size).enqueue(new Callback<List<Character>>() {
-                @Override
-                public void onResponse(Call<List<Character>> call, Response<List<Character>> response) {
-                    listRequestCallback.onListRequest(response.body());
-                }
+    public void getCharactersList(int page, int size, Context context, ResultListCallback listRequestCallback) {
+        if (listRequestCallback instanceof CharactersListPresenter) {
 
-                @Override
-                public void onFailure(Call<List<Character>> call, Throwable t) {
+            CharactersTable characterTable = new CharactersTable(context);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
+            if (dataSource.equals("remote")) {
+                App.getApi().getData(page, size).enqueue(new Callback<List<Character>>() {
+                    @Override
+                    public void onResponse(Call<List<Character>> call, Response<List<Character>> response) {
+                        listRequestCallback.onListRequest(response.body());
+                    }
 
-                }
-            });
+                    @Override
+                    public void onFailure(Call<List<Character>> call, Throwable t) {
+
+                    }
+                });
+            } else listRequestCallback.onListRequest(characterTable.getCharactersFromDB());
         }
-        else listRequestCallback.onListRequest(characterTable.getCharactersFromDB());
     }
+    @Override
+    public void saveCharacterToDB(Character character, Context context) {
+        CharactersTable table = new CharactersTable(context);
+        table.saveCharacterToDB(character);
+    }
+
+
 }
