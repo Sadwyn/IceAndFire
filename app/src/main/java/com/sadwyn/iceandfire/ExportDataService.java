@@ -2,14 +2,14 @@ package com.sadwyn.iceandfire;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import com.csvreader.CsvWriter;
 import com.sadwyn.iceandfire.models.Character;
 
 import org.parceler.Parcels;
@@ -18,9 +18,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.jar.Manifest;
 
-import au.com.bytecode.opencsv.CSVWriter;
+
 
 
 public class ExportDataService extends IntentService {
@@ -45,13 +44,18 @@ public class ExportDataService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) throw new AssertionError();
         List<Character> characters = Parcels.unwrap(intent.getParcelableExtra(Constants.SEND_TO_SERVICE_KEY));
+        String resultMessage;
         try {
-            writeDataInCSV(characters);
+           resultMessage = "Successfully saved" + writeDataInCSV(characters);
         } catch (IOException e) {
-            e.printStackTrace();
+            resultMessage = "Error on Saving";
         }
         Log.i(TAG, "serviceGotInfo");
-        stopSelf();
+
+        String finalResultMessage = resultMessage;
+
+        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText
+                (ExportDataService.this.getApplicationContext(), finalResultMessage, Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -61,34 +65,43 @@ public class ExportDataService extends IntentService {
     }
 
 
-    private void writeDataInCSV(List<Character> list) throws IOException {
+    private String writeDataInCSV(List<Character> list) throws IOException {
 
             String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
             String fileName = "HeroesData.csv";
             String filePath = baseDir + File.separator + fileName;
-            File csvFile = new File(filePath);
             FileWriter mFileWriter;
-            CSVWriter writer;
-
-            if (csvFile.exists() && !csvFile.isDirectory()) {
-                mFileWriter = new FileWriter(filePath, true);
-                writer = new CSVWriter(mFileWriter);
-            } else {
-                writer = new CSVWriter(new FileWriter(filePath));
-            }
+            CsvWriter writer;
+            mFileWriter = new FileWriter(filePath);
+            writer = new CsvWriter(mFileWriter,',');
+            StringBuilder builder = new StringBuilder();
 
             for (Character person : list) {
-                String[] row = new String[]{
-                        person.getName(),
-                        person.getBorn(),
-                        person.getGender(),
-                        person.getFather(),
-                        person.getMother(),
-                        person.getDied()};
-                writer.writeNext(row);
+                writePerson(writer, builder, person);
             }
+            writer.flush();
+            writer.close();
+        return filePath;
+    }
 
-       // else Toast.makeText(this, "Process Fallen, needs permission to external storage", Toast.LENGTH_SHORT).show();
+    private void writePerson(CsvWriter writer, StringBuilder builder, Character person) throws IOException {
+        writer.write(person.getName());
+        writer.write(person.getBorn());
+        writer.write(person.getGender());
+        writer.write(person.getFather());
+        writer.write(person.getMother());
+        writer.write(person.getDied());
+
+        int iteration = 0;
+        for (String alias : person.getAliases()) {
+            iteration++;
+           builder.append(alias);
+            if(iteration != person.getAliases().size())
+                builder.append(",");
+        }
+        writer.write(builder.toString());
+        writer.endRecord();
+        builder.setLength(0);
     }
 }
 

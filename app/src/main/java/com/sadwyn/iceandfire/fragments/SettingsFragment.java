@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.ExportDataService;
@@ -28,6 +26,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 import java.util.Locale;
+
 import static com.sadwyn.iceandfire.Constants.DATA_SOURCE_PREF;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 
@@ -36,7 +35,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
 
     ChangeLanguageCallBack callBack;
     SourceChangeCallBack sourceChangeCallBack;
-    Intent intent;
+
+    public Intent getIntent() {
+        return intent;
+    }
+
+    private Intent intent;
 
     @Override
     public void onAttach(Context context) {
@@ -44,7 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         if(context instanceof MainActivity){
             callBack = (MainActivity)context;
             sourceChangeCallBack = (MainActivity)context;
-
         }
     }
 
@@ -56,12 +59,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         preference1.setOnPreferenceClickListener(preference13 -> {
             Context context = getActivity().getApplicationContext();
 
-            Intent intent = new Intent(context, ExportDataService.class);
+            intent = new Intent(context, ExportDataService.class);
             CharacterModelImpl model = CharacterModelImpl.getInstance();
             List<Character> characterList = model.getCharacters(context);
             intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(characterList));
 
-            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED)
             context.startService(intent);
             else {
@@ -93,7 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
 
         if(preference.getKey().equals(getString(R.string.languages_list_key))) {
             ListPreference languagePreferences = (ListPreference) preference;
-            if(languagePreferences.getValue()==null)
+            if(languagePreferences.getValue() == null)
             languagePreferences.setValue(Locale.getDefault().getLanguage());
 
             languagePreferences.setOnPreferenceChangeListener((preference1, newValue) -> {
@@ -119,20 +123,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
                 return false;
             });
         }
-
         return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case 1:{
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    getActivity().getApplicationContext().startService(intent);
-                else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();}
-            }
-        }
     }
 }
