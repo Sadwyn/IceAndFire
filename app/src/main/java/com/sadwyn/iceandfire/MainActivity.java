@@ -21,14 +21,9 @@ import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.fragments.SettingsFragment;
 import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
-import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.models.ResultListCallback;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
 
-import org.parceler.Parcels;
-
-import java.util.List;
 import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
@@ -49,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+
     }
 
     @Override
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     private void replaceFragment(Fragment fragment, boolean addToBackStack, String TAG) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.replace(R.id.fragContainer, fragment, TAG );
+        transaction.replace(R.id.fragContainer, fragment, TAG);
         if (addToBackStack) transaction.addToBackStack(null);
         transaction.commit();
     }

@@ -51,6 +51,7 @@ public class CharacterModelImpl implements CharacterModel {
         table.saveCharacterToDB(character);
     }
 
+    @Override
     public List<Character> getCharacters(Context context){
         CharactersTable charactersTable = new CharactersTable(context);
         return charactersTable.getCharactersFromDB();

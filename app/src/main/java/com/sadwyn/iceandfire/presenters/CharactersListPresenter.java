@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.models.ResultListCallback;
 
@@ -32,8 +33,8 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
     private int page;
 
     private Call<List<Character>> call;
-    Context context;
-    private CharacterModelImpl characterModel;
+    private Context context;
+    private CharacterModel characterModel;
 
     private CharacterView characterFragmentView;
 

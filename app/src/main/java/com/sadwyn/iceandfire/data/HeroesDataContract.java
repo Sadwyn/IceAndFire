@@ -9,6 +9,11 @@ public final class HeroesDataContract {
 
     public static final class MainDataStructure implements BaseColumns{
         public final static String TABLE_NAME = "heroes";
+        // TODO: 23.03.2017  
+        private static final String SCHEME = "content://";
+        private static final String PATH_HEROES = "/students";
+        private static final String PATH_HEROES_ID = "/students/";
+        public static final int HEROES_ID_PATH_POSITION = 1;
 
         public final static String _ID = BaseColumns._ID;
         public final static String COLUMN_NAME = "name";

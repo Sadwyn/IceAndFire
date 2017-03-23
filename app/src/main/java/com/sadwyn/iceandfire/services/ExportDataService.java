@@ -1,4 +1,4 @@
-package com.sadwyn.iceandfire;
+package com.sadwyn.iceandfire.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 
 import com.csvreader.CsvWriter;
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.models.Character;
 
 import org.parceler.Parcels;

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class SplashScreenActivity extends AppCompatActivity {
-public static final long SPLASH_DELAY = 2000;
+public static final long SPLASH_DELAY = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -14,7 +14,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.sadwyn.iceandfire.Constants;
-import com.sadwyn.iceandfire.ExportDataService;
+import com.sadwyn.iceandfire.services.ExportDataService;
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.models.Character;
@@ -87,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(key, lang);
-        editor.commit();
+        editor.apply();
     }
 
     public static SettingsFragment newInstance(){
