@@ -6,6 +6,7 @@ public interface Constants {
     String BACKGROUND_IMAGE_URL = "http://wallpaperscraft.ru/image/linii_svetlyy_fon_yarkiy_43975_540x960.jpg";
     String BASE_URL = "http://anapioficeandfire.com/";
     int DEFAULT_SPAN_COUNT = 2;
+    int REQUEST_FOR_WRITE_TO_CSV = 1;
     String LANG_PREF = "LANG_PREF";
     String DATA_SOURCE_PREF = "DATA_SOURCE_PREF";
     String CHARACTER_KEY = "CHARACTER_KEY";

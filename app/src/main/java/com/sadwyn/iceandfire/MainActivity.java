@@ -34,6 +34,7 @@ import java.util.Locale;
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
+import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
 
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode){
-            case 1:{
+            case REQUEST_FOR_WRITE_TO_CSV : {
                 Intent intent = ((SettingsFragment)getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT_TAG)).getIntent();
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                    startService(intent);

@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.DATA_SOURCE_PREF;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
+import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat implements ActivityCompat.OnRequestPermissionsResultCallback{
@@ -69,7 +70,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
                     == PackageManager.PERMISSION_GRANTED)
             context.startService(intent);
             else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_FOR_WRITE_TO_CSV);
             }
             return false;
         });
