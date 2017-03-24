@@ -37,7 +37,14 @@
         android:exported="true"
         android:authorities="com.sadwyn.iceandfire.provider.contract"
         android:name=".content_providers.CharactersContentProvider" />
+
+        <receiver android:name=".views.widgets.CharacterInfoWidget" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/character_widget_provider" />
+        </receiver>
+
     </application>
-
-
 </manifest>
