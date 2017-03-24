@@ -59,11 +59,7 @@ public class CharactersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position != listOfCharacters.size())
-            return ITEM_KEY;
-        else if (isError)
-            return ITEM_KEY;
-        else return PROGRESS_KEY;
+        return position != listOfCharacters.size() - 1 ? ITEM_KEY : isError ? ITEM_KEY : PROGRESS_KEY;
     }
 
     @Override
