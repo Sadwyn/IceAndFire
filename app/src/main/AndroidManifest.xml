@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <permission android:name="com.iceandfire.permission"/>
 
     <application
         android:name=".App"
@@ -23,8 +24,7 @@
         <activity android:name=".MainActivity"> </activity>
 
         <service
-            android:name=".services.ExportDataService"
-            android:enabled="true">
+            android:name=".services.ExportDataService">
         </service>
 
         <meta-data
@@ -32,9 +32,12 @@
             android:value="2a06c4bf707bb6c6dc90a0fd9403ab108032d963" />
 
     <provider
-    android:authorities="com.sadwyn.iceandfire"
-    android:name=".content_providers.CharactersContentProvider"/>
-
+        android:readPermission="com.iceandfire.permission"
+        android:grantUriPermissions="true"
+        android:exported="true"
+        android:authorities="com.sadwyn.iceandfire.provider.contract"
+        android:name=".content_providers.CharactersContentProvider" />
     </application>
+
 
 </manifest>

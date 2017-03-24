@@ -6,14 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class SplashScreenActivity extends AppCompatActivity {
-public static final long SPLASH_DELAY = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }, SPLASH_DELAY);
+        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

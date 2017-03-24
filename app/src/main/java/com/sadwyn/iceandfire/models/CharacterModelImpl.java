@@ -23,7 +23,9 @@ public class CharacterModelImpl implements CharacterModel {
     private CharacterModelImpl(){}
 
     @Override
-    public void getCharactersList(int page, int size, Context context, ResultListCallback listRequestCallback) {
+    public void getCharactersList(int page, int size, Context context, ResultListCallback listRequestCallback,
+                                  FailureRequestCallback failureRequestCallback) {
+
         if (listRequestCallback instanceof CharactersListPresenter) {
 
             CharactersTable characterTable = new CharactersTable(context);
@@ -38,7 +40,7 @@ public class CharacterModelImpl implements CharacterModel {
 
                     @Override
                     public void onFailure(Call<List<Character>> call, Throwable t) {
-
+                        failureRequestCallback.onFailureRequest();
                     }
                 });
             } else listRequestCallback.onListRequest(characterTable.getCharactersFromDB());
@@ -56,5 +58,4 @@ public class CharacterModelImpl implements CharacterModel {
         CharactersTable charactersTable = new CharactersTable(context);
         return charactersTable.getCharactersFromDB();
     }
-
 }

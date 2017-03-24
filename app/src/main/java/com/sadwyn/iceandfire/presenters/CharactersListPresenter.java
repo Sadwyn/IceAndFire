@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.models.FailureRequestCallback;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 import retrofit2.Call;
 
-public class CharactersListPresenter extends BasePresenter implements ResultListCallback {
+public class CharactersListPresenter extends BasePresenter implements ResultListCallback, FailureRequestCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
     public static final String LIST_KEY = "LIST_KEY";
@@ -54,7 +55,7 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
     public void onViewCreated(View view, Bundle bundle) {
         if(getList().isEmpty()) {
             if (bundle == null)
-                characterModel.getCharactersList(page, size, view.getContext(), this);
+                characterModel.getCharactersList(page, size, view.getContext(), this, this);
             else restoreData(bundle);
         }
     }
@@ -83,23 +84,28 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
         set = new LinkedHashSet<>();
     }
 
-    private void setInfoToView(List<Character> characters, boolean isError){
+    private void setInfoToView(List<Character> characters){
             for (Character person : characters) {
                 if (person != null && !person.getName().equals(""))
                     set.add(person);
             }
             list.addAll(set);
             set.clear();
-            characterFragmentView.showCharactersList(isError);
+            characterFragmentView.showCharactersList(false);
     }
 
     public void addNewData() {
         page++;
-        characterModel.getCharactersList(page, size, context, this );
+        characterModel.getCharactersList(page, size, context, this, this);
     }
 
     @Override
     public void onListRequest(List<Character> characters) {
-        setInfoToView(characters, false);
+        setInfoToView(characters);
+    }
+
+    @Override
+    public void onFailureRequest() {
+      characterFragmentView.showCharactersList(true);
     }
 }

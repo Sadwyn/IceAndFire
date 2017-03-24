@@ -47,7 +47,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new CharactersListPresenter(this.getActivity().getApplicationContext(), this);
+        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
     }
 
     @Nullable

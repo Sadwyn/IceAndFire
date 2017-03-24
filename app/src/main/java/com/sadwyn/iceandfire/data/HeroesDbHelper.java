@@ -16,7 +16,6 @@ public class HeroesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         createDB(db);
-        updateDBtoSecondVersion(db);
     }
 
     private void createDB(SQLiteDatabase db) {
@@ -31,6 +30,7 @@ public class HeroesDbHelper extends SQLiteOpenHelper {
                 + HeroesDataContract.MainDataStructure.COLUMN_DEAD + " TEXT NOT NULL);";
 
         db.execSQL(SQL_CREATE_HEROES_TABLE);
+        updateDBtoSecondVersion(db);
     }
 
     @Override

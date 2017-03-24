@@ -41,20 +41,9 @@ public class CharactersTable {
         List<Character> result = new ArrayList<>();
         SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
 
-        String[] projection = {
-                HeroesDataContract.MainDataStructure._ID,
-                HeroesDataContract.MainDataStructure.COLUMN_NAME,
-                HeroesDataContract.MainDataStructure.COLUMN_BORN,
-                HeroesDataContract.MainDataStructure.COLUMN_KINGDOM,
-                HeroesDataContract.MainDataStructure.COLUMN_GENDER,
-                HeroesDataContract.MainDataStructure.COLUMN_FATHER,
-                HeroesDataContract.MainDataStructure.COLUMN_MOTHER,
-                HeroesDataContract.MainDataStructure.COLUMN_DEAD,
-        };
-
         Cursor cursor = readableDatabase.query(
                 HeroesDataContract.MainDataStructure.TABLE_NAME,
-                projection,
+                HeroesDataContract.MainDataStructure.DEFAULT_PROJECTION,
                 null,
                 null,
                 null,
@@ -88,8 +77,8 @@ public class CharactersTable {
                     aliases.add(c.getString(c.getColumnIndex("nickname")));
                 c.close();
 
-
                 Character character = new Character();
+
                 character.setName(name);
                 character.setBorn(born);
                 character.setCulture(kingdom);
@@ -98,6 +87,7 @@ public class CharactersTable {
                 character.setMother(mother);
                 character.setDied(dead);
                 character.setAliases(aliases);
+
                 result.add(character);
             }
         }
