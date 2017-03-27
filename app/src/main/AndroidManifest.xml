@@ -3,8 +3,10 @@
     package="com.sadwyn.iceandfire">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <permission android:name="com.iceandfire.permission"/>
+    <uses-permission android:name="com_iceandfire_permission"/>
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <permission android:name="com.iceandfire.permission" />
 
     <application
         android:name=".App"
@@ -13,7 +15,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreenActivity"
+        <activity
+            android:name=".SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,30 +24,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"> </activity>
+        <activity android:name=".MainActivity"></activity>
 
-        <service
-            android:name=".services.ExportDataService">
-        </service>
+        <service android:name=".services.ExportDataService"></service>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2a06c4bf707bb6c6dc90a0fd9403ab108032d963" />
 
-    <provider
-        android:readPermission="com.iceandfire.permission"
-        android:grantUriPermissions="true"
-        android:exported="true"
-        android:authorities="com.sadwyn.iceandfire.provider.contract"
-        android:name=".content_providers.CharactersContentProvider" />
+        <provider
+            android:name=".content_providers.CharactersContentProvider"
+            android:authorities="com.sadwyn.iceandfire.provider.contract"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:readPermission="com.iceandfire.permission" />
 
-        <receiver android:name=".views.widgets.CharacterInfoWidget" android:label="@string/app_name">
+        <receiver android:name=".views.widgets.CharacterWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/character_widget_provider" />
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/character_widget_info" />
+        </receiver>
+
+        <receiver android:name=".MainActivity$WidgetIntentReceiver">
+            <intent-filter>
+                <action android:name="WIDGET_INFO_GOTH"/>
+            </intent-filter>
         </receiver>
 
     </application>
+
 </manifest>

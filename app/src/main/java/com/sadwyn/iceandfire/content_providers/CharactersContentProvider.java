@@ -66,7 +66,7 @@ public class CharactersContentProvider extends ContentProvider {
                 break;
             }
             case ALIASES_ID : {
-                selection = AliasesStructure._ID + "=?";
+                selection = AliasesStructure.OUTER_KEY + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(AliasesStructure.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;

@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp"
+    android:background="@color/colorAccent">
 
     <ImageButton
         android:id="@+id/prevCharacter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@android:drawable/ic_media_previous" />
+        android:layout_height="match_parent"
+        android:layout_weight="3" />
+
 
     <TextView
         android:id="@+id/characterName"
         android:layout_width="196dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Start Widget Text"
-        android:textSize="@dimen/item_layout_chatacter_text_size"/>
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:clickable="true"
+        />
 
     <ImageButton
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_media_next" />
+        android:layout_height="match_parent"
+         />
 </LinearLayout>
