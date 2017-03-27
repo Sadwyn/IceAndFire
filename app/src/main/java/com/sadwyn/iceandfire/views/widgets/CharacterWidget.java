@@ -7,18 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
 
-import static com.sadwyn.iceandfire.Constants.*;
+import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
+import static com.sadwyn.iceandfire.Constants.INCOMING_INTENT;
+import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
+import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
+import static com.sadwyn.iceandfire.Constants.WIDGET_INFO_GOTH;
 
 public class CharacterWidget extends AppWidgetProvider {
 
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
             // Create an Intent to launch ExampleActivity
             Intent nameRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
             Intent prevRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
@@ -36,16 +38,12 @@ public class CharacterWidget extends AppWidgetProvider {
             PendingIntent prevPending = PendingIntent.getBroadcast(context, 101, prevRequest, 0);
             PendingIntent nextPending = PendingIntent.getBroadcast(context, 102, nextRequest, 0);
 
-
-            // Get the layout for the App Widget and attach an on-click listener
-            // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
             views.setOnClickPendingIntent(R.id.characterName, namePending);
             views.setOnClickPendingIntent(R.id.prevCharacter, prevPending);
             views.setOnClickPendingIntent(R.id.nextCharacter, nextPending);
 
 
-            // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetIds, views);
         }
 
@@ -64,5 +62,6 @@ public class CharacterWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
 }
 

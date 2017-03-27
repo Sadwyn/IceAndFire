@@ -45,6 +45,7 @@ import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
+import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;
 
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
@@ -68,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     @Override
     protected void onResume() {
         super.onResume();
-        if(getIntent().getBooleanExtra("START_DETAIL_FROM_WIDGET", false))
+        if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
-            replaceFragment(DetailFragment.newInstance(character), true, DETAIL_FRAGMENT_TAG);
+            replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
     }
 
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                     Character character = getCharacterById(context, 1);
                     Intent startDetail = new Intent(context.getApplicationContext(), MainActivity.class);
 
-                    startDetail.putExtra("START_DETAIL_FROM_WIDGET", true);
+                    startDetail.putExtra(START_DETAIL_FROM_WIDGET, true);
                     startDetail.putExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER, Parcels.wrap(character));
                     startDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(startDetail);

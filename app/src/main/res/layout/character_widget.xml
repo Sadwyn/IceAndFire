@@ -8,7 +8,8 @@
         android:id="@+id/prevCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:background="@android:drawable/ic_media_previous"/>
 
 
     <TextView
@@ -26,5 +27,6 @@
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:drawable/ic_media_next"
          />
 </LinearLayout>
