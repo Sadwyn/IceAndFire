@@ -68,6 +68,15 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     }
 
     @Override
+    protected void onPause() {
+        if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
+        {
+            finish();
+        }
+        super.onPause();
+    }
+
+    @Override
     public void onItemClick(Character character) {
         replaceFragment(DetailFragment.newInstance(character), true, DETAIL_FRAGMENT_TAG);
     }
