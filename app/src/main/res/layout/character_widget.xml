@@ -8,8 +8,7 @@
         android:id="@+id/prevCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="@android:drawable/ic_media_previous"/>
+        android:layout_weight="3" />
 
 
     <TextView
@@ -20,6 +19,7 @@
         android:textAlignment="center"
         android:layout_weight="1"
         android:clickable="true"
+
         />
 
     <ImageButton
@@ -27,6 +27,5 @@
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:drawable/ic_media_next"
          />
 </LinearLayout>

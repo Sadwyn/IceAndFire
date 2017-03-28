@@ -1,28 +1,23 @@
 package com.sadwyn.iceandfire;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.sadwyn.iceandfire.data.HeroesDataContract;
+import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
@@ -34,14 +29,18 @@ import com.sadwyn.iceandfire.utils.LocaleUtils;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
+import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
+import static com.sadwyn.iceandfire.Constants.NEXT_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.NEXT_HERO_NAME;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
+import static com.sadwyn.iceandfire.Constants.PREV_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.PREV_HERO_NAME;
 import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
@@ -62,18 +61,17 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
 
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -148,74 +146,38 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     }
 
     public static class WidgetIntentReceiver extends BroadcastReceiver {
-
-        public WidgetIntentReceiver() {
-        }
+        DataProviderImpl provider = new DataProviderImpl();
+        public WidgetIntentReceiver() {}
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra(Constants.INCOMING_INTENT);
             switch (s) {
                 case HERO_DETAIL_REQUESTED:
-                    Character character = getCharacterById(context, 1);
-                    Intent startDetail = new Intent(context.getApplicationContext(), MainActivity.class);
-
-                    startDetail.putExtra(START_DETAIL_FROM_WIDGET, true);
-                    startDetail.putExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER, Parcels.wrap(character));
-                    startDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(startDetail);
+                    int currentId = intent.getIntExtra(CURRENT_HERO_ID, 1);
+                    Character character = provider.getCharacterById(context, currentId);
+                    provider.showDetailsOfChosenHero(context, character);
 
                     break;
                 case PREV_HERO_SWITCH:
-                    Log.i("TAG", "LEFT_HERO");
+                    int prevId = (int) (Math.random() * provider.getCharactersCount(context) + 1);
+                    character =  provider.getCharacterById(context,prevId);
+                    Intent prevHeroIntent = new Intent("com.sadwyn.update.widget");
+                    prevHeroIntent.putExtra(PREV_HERO_ID, prevId);
+                    prevHeroIntent.putExtra(PREV_HERO_NAME, character.getName());
+                    context.sendBroadcast(prevHeroIntent);
+
                     break;
                 case NEXT_HERO_SWITCH:
-                    Log.i("TAG", "RIGHT_HERO");
+                    int nextId = (int) (Math.random() * provider.getCharactersCount(context) + 1);
+                    character =  provider.getCharacterById(context,nextId);
+                    Intent nextHeroIntent = new Intent("com.sadwyn.update.widget");
+                    nextHeroIntent.putExtra(NEXT_HERO_ID, nextId);
+                    nextHeroIntent.putExtra(NEXT_HERO_NAME, character.getName());
+                    context.sendBroadcast(nextHeroIntent);
                     break;
             }
         }
 
-        private Character getCharacterById(Context context, int targetId) {
-            Character character = new Character();
-
-            ContentResolver resolver = context.getContentResolver();
-            Cursor mainCursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/characters/"+targetId),
-                    null, null, null, null, null);
-            if (mainCursor != null) {
-                try {
-                    if (mainCursor.moveToFirst()) {
-                        int id = mainCursor.getInt(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure._ID));
-                        character.setName(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_NAME)));
-                        character.setBorn(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_BORN)));
-                        character.setCulture(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_KINGDOM)));
-                        character.setGender(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_GENDER)));
-                        character.setFather(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_FATHER)));
-                        character.setMother(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_MOTHER)));
-                        character.setDied(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_DEAD)));
-                    }
-                } finally {
-                    mainCursor.close();
-                }
-            }
-
-            Cursor aliasesCursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/aliases/"+targetId),
-                    null, null, null, null, null);
-
-            ArrayList<String> aliases = new ArrayList<>();
-
-            if (aliasesCursor != null)
-                try {
-                    while (aliasesCursor.moveToNext()) {
-                        String alias = aliasesCursor.getString(aliasesCursor.getColumnIndex(HeroesDataContract.AliasesStructure.COLUMN_NICKNAME));
-                        aliases.add(alias);
-                    }
-                }
-                finally {
-                    aliasesCursor.close();
-                }
-                character.setAliases(aliases);
-
-            return character;
-        }
     }
 }
