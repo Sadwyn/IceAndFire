@@ -9,6 +9,7 @@ import android.net.Uri;
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.data.HeroesDataContract;
+import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.models.Character;
 
 import org.parceler.Parcels;

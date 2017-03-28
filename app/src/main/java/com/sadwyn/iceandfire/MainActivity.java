@@ -60,18 +60,11 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
-
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @Override

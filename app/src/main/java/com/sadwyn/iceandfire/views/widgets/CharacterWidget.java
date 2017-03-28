@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.RemoteViews;
 
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
@@ -28,6 +30,7 @@ public class CharacterWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         // Create an Intent to launch ExampleActivity
         Intent nameRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
         Intent prevRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
@@ -49,7 +52,6 @@ public class CharacterWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.characterName, namePending);
         views.setOnClickPendingIntent(R.id.prevCharacter, prevPending);
         views.setOnClickPendingIntent(R.id.nextCharacter, nextPending);
-
 
         appWidgetManager.updateAppWidget(appWidgetIds, views);
     }

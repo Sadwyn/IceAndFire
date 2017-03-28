@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/colorAccent">
+    android:background="@drawable/widget_view">
 
     <ImageButton
         android:id="@+id/prevCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:background="@drawable/left_arrow"/>
 
 
     <TextView
@@ -19,7 +20,8 @@
         android:textAlignment="center"
         android:layout_weight="1"
         android:clickable="true"
-
+        android:textColor="@color/gray"
+        android:fontFamily="monospace"
         />
 
     <ImageButton
@@ -27,5 +29,6 @@
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/right_arrow"
          />
 </LinearLayout>
