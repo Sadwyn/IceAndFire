@@ -35,6 +35,7 @@ import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.INSTANT_ID;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_NAME;
@@ -178,6 +179,15 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                     nextHeroIntent.putExtra(NEXT_HERO_NAME, character.getName());
                     context.sendBroadcast(nextHeroIntent);
                     break;
+                case INSTANT_ID :
+                    int startID = intent.getIntExtra("HERO_START_ID",0);
+                    character =  provider.getCharacterById(context,startID);
+                    Intent instantHeroIntent = new Intent("com.sadwyn.update.widget");
+                    instantHeroIntent.putExtra("INSTANT_HERO_ID", startID);
+                    instantHeroIntent.putExtra("INSTANT_HERO_NAME", character.getName());
+                    context.sendBroadcast(instantHeroIntent);
+                    break;
+
             }
         }
 
