@@ -98,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
                      if(position == 1){
-                        replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+                        replaceFragment(CharactersFragment.newInstance(), true, CHARACTERS_FRAGMENT_TAG);
                     }
                     else if(position == 2){
-                        replaceFragment(SettingsFragment.newInstance(),false,SETTINGS_FRAGMENT_TAG);
+                        replaceFragment(SettingsFragment.newInstance(),true,SETTINGS_FRAGMENT_TAG);
                     }
 
                 }).build();
