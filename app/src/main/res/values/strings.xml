@@ -8,7 +8,8 @@
     <string name="motherText">Mother : %s</string>
     <string name="deadText">Dead : %s</string>
     <string name="aliases">Aliases :</string>
-    <string name="action_settings">Settings</string>
+    <string name="drawer_item_settings">Settings</string>
+    <string name="drawer_item_characters">Characters</string>
     <string name="language_title">Language</string>
     <string name="english_title">English</string>
     <string name="russian_title">Russian</string>
@@ -19,4 +20,6 @@
     <string name="data_sources_key" translatable="false">data_sources</string>
     <string name="exportDataButtonTitle">Export From Database</string>
     <string name="exportButtonKey" translatable="false">exportButtonKey</string>
+
+
 </resources>

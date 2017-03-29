@@ -8,7 +8,7 @@
     <string name="kingdomText">Королевство : %s</string>
     <string name="motherText">Мать : %s</string>
     <string name="aliases">Прозвища :</string>
-    <string name="action_settings">Настройки</string>
+    <string name="drawer_item_settings">Настройки</string>
     <string name="language_title">Язык</string>
     <string name="english_title">Английский</string>
     <string name="russian_title">Русский</string>
@@ -16,4 +16,5 @@
     <string name="local_data_source_title">Локальное Хранилище</string>
     <string name="source_type_title">Источник Данных</string>
     <string name="exportDataButtonTitle">Экспорт из базы данных</string>
+    <string name="drawer_item_characters">Персонажи</string>
 </resources>

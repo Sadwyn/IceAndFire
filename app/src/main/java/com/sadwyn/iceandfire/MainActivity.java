@@ -13,10 +13,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
@@ -50,11 +52,18 @@ import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
         SourceChangeCallBack {
-
+    Drawer.Result drawer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawer = intitializeDrawer(toolbar);
+
+
         restoreSavedLocale();
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
@@ -66,6 +75,36 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer!=null && drawer.isDrawerOpen())
+            drawer.closeDrawer();
+        else
+        super.onBackPressed();
+    }
+
+    private Drawer.Result intitializeDrawer(Toolbar toolbar) {
+      return new Drawer()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggle(true)
+                .withHeader(R.layout.drawer_header)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_characters).withIdentifier(1).withIcon(FontAwesome.Icon.faw_home),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_settings).
+                                withIcon(FontAwesome.Icon.faw_wrench).withIdentifier(2)
+                )
+                .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
+                     if(position == 1){
+                        replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+                    }
+                    else if(position == 2){
+                        replaceFragment(SettingsFragment.newInstance(),false,SETTINGS_FRAGMENT_TAG);
+                    }
+
+                }).build();
     }
 
     @Override
@@ -90,21 +129,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         transaction.commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings: {
-                replaceFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
-            }
-        }
-        return true;
-    }
 
     @Override
     public void changeLanguage() {
@@ -150,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     public static class WidgetIntentReceiver extends BroadcastReceiver {
         DataProviderImpl provider = new DataProviderImpl();
-        public static int currentId;
         public WidgetIntentReceiver() {}
 
         @Override
