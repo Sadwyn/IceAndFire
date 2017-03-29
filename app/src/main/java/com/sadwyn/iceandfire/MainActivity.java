@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     public static class WidgetIntentReceiver extends BroadcastReceiver {
         DataProviderImpl provider = new DataProviderImpl();
+        public static int currentId;
         public WidgetIntentReceiver() {}
 
         @Override

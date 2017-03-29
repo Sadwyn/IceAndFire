@@ -4,18 +4,16 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 
-import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
 import static com.sadwyn.iceandfire.Constants.INCOMING_INTENT;
 import static com.sadwyn.iceandfire.Constants.INSTANT_ID;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_ID;

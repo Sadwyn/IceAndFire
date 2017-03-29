@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@drawable/left_arrow"/>
+        android:background="@drawable/widget_arrow_left_background"
+        />
 
 
     <TextView
@@ -25,10 +26,10 @@
         />
 
     <ImageButton
-        android:layout_weight="3"
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/right_arrow"
-         />
+        android:layout_weight="3"
+        android:background="@drawable/widget_arrow_right_bacground"
+        />
 </LinearLayout>
