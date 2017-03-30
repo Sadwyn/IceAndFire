@@ -3,7 +3,8 @@
     package="com.sadwyn.iceandfire">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com_iceandfire_permission"/>
+    <uses-permission android:name="com_iceandfire_permission" />
+
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission android:name="com.iceandfire.permission" />
@@ -24,9 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
 
-        <service android:name=".services.ExportDataService"></service>
+        <service android:name=".services.ExportDataService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -44,20 +45,20 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.sadwyn.update.widget"/>
+                <action android:name="com.sadwyn.update.widget" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/character_widget_info" />
         </receiver>
-
-        <receiver android:name=".MainActivity$WidgetIntentReceiver">
+        <receiver android:name=".WidgetIntentReceiver">
             <intent-filter>
-                <action android:name="WIDGET_INFO_GOTH"/>
+                <action android:name="WIDGET_INFO_GOTH" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".WidgetDetailActivity"></activity>
     </application>
 
 </manifest>

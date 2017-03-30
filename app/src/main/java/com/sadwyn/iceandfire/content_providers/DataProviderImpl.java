@@ -8,6 +8,7 @@ import android.net.Uri;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.MainActivity;
+import com.sadwyn.iceandfire.WidgetDetailActivity;
 import com.sadwyn.iceandfire.data.HeroesDataContract;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.models.Character;
@@ -34,10 +35,10 @@ public class DataProviderImpl {
     }
 
     public void showDetailsOfChosenHero(Context context, Character character) {
-        Intent startDetail = new Intent(context.getApplicationContext(), MainActivity.class);
+        Intent startDetail = new Intent(context.getApplicationContext(), WidgetDetailActivity.class);
         startDetail.putExtra(START_DETAIL_FROM_WIDGET, true);
         startDetail.putExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER, Parcels.wrap(character));
-        startDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(startDetail);
     }
 

@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewManager;
 import android.widget.Toast;
 
@@ -62,25 +65,26 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        restoreSavedLocale();
-
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
-
-        if (fragment == null)
-            replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
 
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
             ((ViewManager)toolbar.getParent()).removeView(toolbar);
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
         else {
+            restoreSavedLocale();
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             drawer = intitializeDrawer(toolbar);
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
+
+            if (fragment == null)
+                replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
         }
 
     }
@@ -107,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
             new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         }
-
     }
 
     private Drawer.Result intitializeDrawer(Toolbar toolbar) {
@@ -194,48 +197,4 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         }
     }
 
-    public static class WidgetIntentReceiver extends BroadcastReceiver {
-        DataProviderImpl provider = new DataProviderImpl();
-        public WidgetIntentReceiver() {}
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String s = intent.getStringExtra(Constants.INCOMING_INTENT);
-            switch (s) {
-                case HERO_DETAIL_REQUESTED:
-                    int currentId = intent.getIntExtra(CURRENT_HERO_ID, 1);
-                    Character character = provider.getCharacterById(context, currentId);
-                    provider.showDetailsOfChosenHero(context, character);
-
-                    break;
-                case PREV_HERO_SWITCH:
-                    int prevId = (int) (Math.random() * provider.getCharactersCount(context) + 1);
-                    character =  provider.getCharacterById(context,prevId);
-                    Intent prevHeroIntent = new Intent("com.sadwyn.update.widget");
-                    prevHeroIntent.putExtra(PREV_HERO_ID, prevId);
-                    prevHeroIntent.putExtra(PREV_HERO_NAME, character.getName());
-                    context.sendBroadcast(prevHeroIntent);
-
-                    break;
-                case NEXT_HERO_SWITCH:
-                    int nextId = (int) (Math.random() * provider.getCharactersCount(context) + 1);
-                    character =  provider.getCharacterById(context,nextId);
-                    Intent nextHeroIntent = new Intent("com.sadwyn.update.widget");
-                    nextHeroIntent.putExtra(NEXT_HERO_ID, nextId);
-                    nextHeroIntent.putExtra(NEXT_HERO_NAME, character.getName());
-                    context.sendBroadcast(nextHeroIntent);
-                    break;
-                case INSTANT_ID :
-                    int startID = intent.getIntExtra("HERO_START_ID",0);
-                    character =  provider.getCharacterById(context,startID);
-                    Intent instantHeroIntent = new Intent("com.sadwyn.update.widget");
-                    instantHeroIntent.putExtra("INSTANT_HERO_ID", startID);
-                    instantHeroIntent.putExtra("INSTANT_HERO_NAME", character.getName());
-                    context.sendBroadcast(instantHeroIntent);
-                    break;
-
-            }
-        }
-
-    }
 }

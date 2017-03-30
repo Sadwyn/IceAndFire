@@ -10,6 +10,8 @@ import android.widget.RemoteViews;
 
 import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.WidgetDetailActivity;
+import com.sadwyn.iceandfire.WidgetIntentReceiver;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
@@ -32,11 +34,11 @@ public class CharacterWidget extends AppWidgetProvider {
         DataProviderImpl provider = new DataProviderImpl();
         int count = provider.getCharactersCount(context);
         if(count!=0) {
-            Intent nameRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
-            Intent prevRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
-            Intent nextRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
+            Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
+            Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
+            Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
 
-            Intent instantIdRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
+            Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
             instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID);
             instantIdRequest.putExtra("HERO_START_ID", Math.round(count/2f));
 
@@ -87,7 +89,7 @@ public class CharacterWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        Intent nameRequest = new Intent(context, MainActivity.WidgetIntentReceiver.class);
+        Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
         nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
         nameRequest.setAction(WIDGET_INFO_GOTH);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
@@ -108,7 +110,6 @@ public class CharacterWidget extends AppWidgetProvider {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra("INSTANT_HERO_ID",0));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra("INSTANT_HERO_NAME"));
             }
-
 
             PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.characterName, namePending);

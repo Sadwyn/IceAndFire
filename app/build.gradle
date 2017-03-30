@@ -59,7 +59,7 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.2.3'
     }
 }
-buildscript{
+buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -72,7 +72,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-repositories{
+repositories {
     mavenCentral()
 }
 
@@ -97,20 +97,21 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     compile "org.parceler:parceler-api:$parcelerVersion"
     annotationProcessor "org.parceler:parceler:$parcelerVersion"
-    testCompile 'junit:junit:4.12'
     compile "com.android.support:percent:$supportVersion"
     compile "com.github.bumptech.glide:glide:$glideVersion"
     compile "com.android.support:support-v4:$supportVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$logInterceptorVersion"
     compile "com.android.support:preference-v7:$supportVersion"
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar')
-    {
-        transitive = true;
-    }
+            {
+                transitive = true;
+            }
     compile('com.mikepenz.materialdrawer:library:0.9.5@aar') {
         transitive = true
     }
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
