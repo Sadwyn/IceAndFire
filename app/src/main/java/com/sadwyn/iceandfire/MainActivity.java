@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.ViewManager;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -61,12 +62,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        drawer = intitializeDrawer(toolbar);
-
         restoreSavedLocale();
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
@@ -76,8 +71,16 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
+            Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
+            ((ViewManager)toolbar.getParent()).removeView(toolbar);
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
+        }
+        else {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            drawer = intitializeDrawer(toolbar);
         }
 
     }
@@ -120,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
                      if(position == 1){
-                             replaceFragment(CharactersFragment.newInstance(),true , CHARACTERS_FRAGMENT_TAG);
+                             replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG),true , CHARACTERS_FRAGMENT_TAG);
                     }
                     else if(position == 2){
                          replaceFragment(SettingsFragment.newInstance(),true , SETTINGS_FRAGMENT_TAG);
