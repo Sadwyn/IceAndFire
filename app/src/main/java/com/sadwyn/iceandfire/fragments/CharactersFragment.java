@@ -1,7 +1,6 @@
 package com.sadwyn.iceandfire.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,13 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
-import com.sadwyn.iceandfire.MainActivity;
+import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
-import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

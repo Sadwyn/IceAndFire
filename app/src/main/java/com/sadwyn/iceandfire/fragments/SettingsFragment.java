@@ -15,7 +15,7 @@ import android.support.v7.preference.PreferenceManager;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.services.ExportDataService;
-import com.sadwyn.iceandfire.MainActivity;
+import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;

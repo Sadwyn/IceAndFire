@@ -1,5 +1,7 @@
 package com.sadwyn.iceandfire.fragments;
 
+import android.appwidget.AppWidgetManager;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -70,6 +72,8 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
             initializeData();
             CharacterModelImpl model = CharacterModelImpl.getInstance();
             model.saveCharacterToDB(character, view.getContext());
+            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            getContext().sendBroadcast(intent);
         }
     }
 

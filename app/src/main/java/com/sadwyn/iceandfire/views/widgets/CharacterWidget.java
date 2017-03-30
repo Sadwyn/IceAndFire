@@ -6,12 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.sadwyn.iceandfire.MainActivity;
 import com.sadwyn.iceandfire.R;
-import com.sadwyn.iceandfire.WidgetDetailActivity;
-import com.sadwyn.iceandfire.WidgetIntentReceiver;
+import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
@@ -31,9 +30,11 @@ public class CharacterWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         DataProviderImpl provider = new DataProviderImpl();
         int count = provider.getCharactersCount(context);
         if(count!=0) {
+
             Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
@@ -97,8 +98,10 @@ public class CharacterWidget extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
         ComponentName thisWidget = new ComponentName(context.getApplicationContext(), CharacterWidget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        if (appWidgetIds != null && appWidgetIds.length > 0) {
 
+        if(intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) onUpdate(context, appWidgetManager,appWidgetIds);
+
+        if (appWidgetIds != null && appWidgetIds.length > 0) {
             if (intent.hasExtra(PREV_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(PREV_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(PREV_HERO_NAME));

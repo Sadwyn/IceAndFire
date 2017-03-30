@@ -1,9 +1,10 @@
-package com.sadwyn.iceandfire;
+package com.sadwyn.iceandfire.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.models.Character;
 

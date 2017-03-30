@@ -1,4 +1,4 @@
-package com.sadwyn.iceandfire;
+package com.sadwyn.iceandfire.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.sadwyn.iceandfire.Constants;
+import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;

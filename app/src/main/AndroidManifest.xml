@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activities.SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activities.MainActivity" />
 
         <service android:name=".services.ExportDataService" />
 
@@ -52,13 +52,15 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/character_widget_info" />
         </receiver>
-        <receiver android:name=".WidgetIntentReceiver">
+        <receiver android:name=".receivers.WidgetIntentReceiver">
             <intent-filter>
                 <action android:name="WIDGET_INFO_GOTH" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".WidgetDetailActivity"></activity>
+        <activity android:name=".activities.WidgetDetailActivity">
+
+        </activity>
     </application>
 
 </manifest>

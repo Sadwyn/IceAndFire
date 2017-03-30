@@ -1,4 +1,4 @@
-package com.sadwyn.iceandfire;
+package com.sadwyn.iceandfire.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.sadwyn.iceandfire.Constants;
+import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.models.Character;
