@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,7 +53,10 @@ import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
         SourceChangeCallBack {
+
     Drawer.Result drawer;
+    boolean doubleBackToExitPressedOnce = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,26 +67,44 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawer = intitializeDrawer(toolbar);
 
-
         restoreSavedLocale();
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
 
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
         {
             Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
             replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
         }
+
     }
 
     @Override
     public void onBackPressed() {
-        if(drawer!=null && drawer.isDrawerOpen())
-            drawer.closeDrawer();
-        else
-        super.onBackPressed();
+
+        if(drawer!=null && drawer.isDrawerOpen()) drawer.closeDrawer();
+
+        else if(getSupportFragmentManager().findFragmentById(R.id.fragContainer)==
+                getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG))
+            super.onBackPressed();
+
+       else {
+            if (doubleBackToExitPressedOnce) {
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+                return;
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        }
+
     }
 
     private Drawer.Result intitializeDrawer(Toolbar toolbar) {
@@ -98,21 +120,18 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
                      if(position == 1){
-                        replaceFragment(CharactersFragment.newInstance(), true, CHARACTERS_FRAGMENT_TAG);
+                             replaceFragment(CharactersFragment.newInstance(),true , CHARACTERS_FRAGMENT_TAG);
                     }
                     else if(position == 2){
-                        replaceFragment(SettingsFragment.newInstance(),true,SETTINGS_FRAGMENT_TAG);
+                         replaceFragment(SettingsFragment.newInstance(),true , SETTINGS_FRAGMENT_TAG);
                     }
-
                 }).build();
     }
 
     @Override
     protected void onPause() {
         if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
-        {
             finish();
-        }
         super.onPause();
     }
 
