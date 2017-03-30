@@ -58,4 +58,10 @@ public class CharacterModelImpl implements CharacterModel {
         CharactersTable charactersTable = new CharactersTable(context);
         return charactersTable.getCharactersFromDB();
     }
+
+    @Override
+    public void deleteCharacterBySwipe(Context context, int id) {
+        CharactersTable charactersTable = new CharactersTable(context);
+        charactersTable.deleteCharacterById(id);
+    }
 }

@@ -11,12 +11,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.models.CharacterModel;
+import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
 import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.R;
@@ -38,6 +39,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     private CharactersAdapter adapter;
     private CharactersListPresenter presenter;
     private RecyclerView.OnScrollListener supportListener;
+    CharacterModel model;
 
     public CharactersListPresenter getPresenter() {
         return presenter;
@@ -47,6 +49,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
+        model = CharacterModelImpl.getInstance();
     }
 
     @Nullable
@@ -112,7 +115,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
             {
-
+                model.deleteCharacterBySwipe(getContext().getApplicationContext(), viewHolder.getAdapterPosition()+1);
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView);

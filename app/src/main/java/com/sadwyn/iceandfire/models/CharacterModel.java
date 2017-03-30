@@ -9,5 +9,8 @@ public interface CharacterModel {
                            FailureRequestCallback failureRequestCallback);
 
     void saveCharacterToDB(Character character, Context context);
+
     List<Character> getCharacters(Context context);
+
+    void deleteCharacterBySwipe(Context context, int id);
 }

@@ -25,6 +25,16 @@ public class CharactersTable {
         }
     }
 
+    public boolean deleteCharacterById(int id){
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+
+        writableDatabase.delete("heroes", "_ID" + "='" + String.valueOf(id) + "'", null);
+        writableDatabase.delete("aliases", "outer" + "='" + String.valueOf(id) +"'", null);
+        writableDatabase.close();
+        Log.i("TAG", "DELETED");
+        return true;
+    }
+
     private boolean isHeroAlreadySaved(Character character) {
         String name = "";
         SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
