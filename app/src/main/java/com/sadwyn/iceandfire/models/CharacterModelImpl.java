@@ -63,5 +63,6 @@ public class CharacterModelImpl implements CharacterModel {
     public void deleteCharacterBySwipe(Context context, int id) {
         CharactersTable charactersTable = new CharactersTable(context);
         charactersTable.deleteCharacterById(id);
+        //Сделать удаление по имени ане по id
     }
 }

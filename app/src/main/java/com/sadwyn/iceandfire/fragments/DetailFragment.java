@@ -55,8 +55,6 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
         }
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

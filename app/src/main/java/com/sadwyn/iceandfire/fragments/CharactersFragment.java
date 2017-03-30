@@ -99,9 +99,10 @@ public class CharactersFragment extends Fragment implements CharacterView {
         layoutManager = isDemoVersion && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ?
                 new GridLayoutManager(getActivity().getApplicationContext(), DEFAULT_SPAN_COUNT) : new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
         if(!isRemoteStorage())
-        addOnSwipeItemListener();
+            addOnSwipeItemListener();
+        recyclerView.setAdapter(adapter);
+
     }
 
     private void addOnSwipeItemListener() {
@@ -116,6 +117,8 @@ public class CharactersFragment extends Fragment implements CharacterView {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
             {
                 model.deleteCharacterBySwipe(getContext().getApplicationContext(), viewHolder.getAdapterPosition()+1);
+                presenter.getList().remove(viewHolder.getAdapterPosition());
+                adapter.notifyDataSetChanged();
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView);
