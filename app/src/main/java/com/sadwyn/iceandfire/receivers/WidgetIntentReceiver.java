@@ -3,6 +3,8 @@ package com.sadwyn.iceandfire.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.views.widgets.WidgetHelper;
@@ -10,6 +12,7 @@ import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.CURRENT_LIST_ID;
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
 import static com.sadwyn.iceandfire.Constants.HERO_START_ID;
 import static com.sadwyn.iceandfire.Constants.INSTANT_HERO_ID;
@@ -21,6 +24,7 @@ import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.PREV_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.PREV_HERO_NAME;
 import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
+import static com.sadwyn.iceandfire.views.widgets.CharacterWidget.currentListId;
 
 
 public class WidgetIntentReceiver extends BroadcastReceiver {
@@ -39,9 +43,11 @@ public class WidgetIntentReceiver extends BroadcastReceiver {
 
                     break;
                 case PREV_HERO_SWITCH :
-                    if(CharacterWidget.currentListId > 1) {
-                        CharacterWidget.currentListId--;
-                        int prevId = CharacterWidget.charactersIds.get(CharacterWidget.currentListId - 1);
+                    if(currentListId > 1) {
+                        currentListId--;
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                        preferences.edit().putInt("CURRENT_LIST_ID",currentListId).apply();
+                        int prevId = CharacterWidget.charactersIds.get(currentListId - 1);
                         character = provider.getCharacterById(context, prevId);
                         Intent prevHeroIntent = new Intent("com.sadwyn.update.widget");
                         prevHeroIntent.putExtra(PREV_HERO_ID, prevId);
@@ -51,9 +57,11 @@ public class WidgetIntentReceiver extends BroadcastReceiver {
 
                     break;
                 case NEXT_HERO_SWITCH :
-                    if(CharacterWidget.currentListId < CharacterWidget.listSize) {
-                        CharacterWidget.currentListId++;
-                        int nextId = CharacterWidget.charactersIds.get(CharacterWidget.currentListId - 1);
+                    if(currentListId < CharacterWidget.listSize) {
+                        currentListId++;
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                        preferences.edit().putInt(CURRENT_LIST_ID,currentListId).apply();
+                        int nextId = CharacterWidget.charactersIds.get(currentListId - 1);
                         character = provider.getCharacterById(context, nextId);
                         Intent nextHeroIntent = new Intent("com.sadwyn.update.widget");
                         nextHeroIntent.putExtra(NEXT_HERO_ID, nextId);

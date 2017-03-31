@@ -6,8 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
 
@@ -46,7 +49,11 @@ public class CharacterWidget extends AppWidgetProvider {
 
             Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
             instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
-            currentListId = (Math.round((charactersIds.size())/2f)) ;
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            currentListId = preferences.getInt(Constants.CURRENT_LIST_ID,  Math.round((charactersIds.size())/2f));
+
+
             instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
 
 

@@ -30,6 +30,8 @@ import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
+import com.sadwyn.iceandfire.views.widgets.WidgetHelper;
 
 import org.parceler.Parcels;
 
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        CharacterWidget.updateWidget(getApplicationContext());
     }
 
     @Override

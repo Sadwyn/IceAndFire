@@ -31,4 +31,5 @@ public interface Constants {
     String INSTANT_HERO_NAME = "INSTANT_HERO_NAME";
 
     String HERO_START_ID = "HERO_START_ID";
+    String CURRENT_LIST_ID = "CURRENT_LIST_ID";
 }

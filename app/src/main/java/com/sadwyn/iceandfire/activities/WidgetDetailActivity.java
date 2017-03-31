@@ -9,6 +9,7 @@ import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import org.parceler.Parcels;
 
@@ -30,5 +31,9 @@ public class WidgetDetailActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CharacterWidget.updateWidget(getApplicationContext());
+    }
 }
