@@ -32,4 +32,5 @@ public interface Constants {
 
     String HERO_START_ID = "HERO_START_ID";
     String CURRENT_LIST_ID = "CURRENT_LIST_ID";
+    String COM_SADWYN_UPDATE_WIDGET = "com.sadwyn.update.widget";
 }

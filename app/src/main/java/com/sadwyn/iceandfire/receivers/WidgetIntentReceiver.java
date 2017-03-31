@@ -29,7 +29,7 @@ import static com.sadwyn.iceandfire.views.widgets.CharacterWidget.currentListId;
 
 public class WidgetIntentReceiver extends BroadcastReceiver {
 
-        WidgetHelper provider = new WidgetHelper();
+    WidgetHelper provider = new WidgetHelper();
         public WidgetIntentReceiver() {}
 
         @Override
@@ -46,10 +46,10 @@ public class WidgetIntentReceiver extends BroadcastReceiver {
                     if(currentListId > 1) {
                         currentListId--;
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                        preferences.edit().putInt("CURRENT_LIST_ID",currentListId).apply();
+                        preferences.edit().putInt(CURRENT_LIST_ID, currentListId).apply();
                         int prevId = CharacterWidget.charactersIds.get(currentListId - 1);
                         character = provider.getCharacterById(context, prevId);
-                        Intent prevHeroIntent = new Intent("com.sadwyn.update.widget");
+                        Intent prevHeroIntent = new Intent(Constants.COM_SADWYN_UPDATE_WIDGET);
                         prevHeroIntent.putExtra(PREV_HERO_ID, prevId);
                         prevHeroIntent.putExtra(PREV_HERO_NAME, character.getName());
                         context.sendBroadcast(prevHeroIntent);
@@ -60,10 +60,10 @@ public class WidgetIntentReceiver extends BroadcastReceiver {
                     if(currentListId < CharacterWidget.listSize) {
                         currentListId++;
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                        preferences.edit().putInt(CURRENT_LIST_ID,currentListId).apply();
+                        preferences.edit().putInt(CURRENT_LIST_ID, currentListId).apply();
                         int nextId = CharacterWidget.charactersIds.get(currentListId - 1);
                         character = provider.getCharacterById(context, nextId);
-                        Intent nextHeroIntent = new Intent("com.sadwyn.update.widget");
+                        Intent nextHeroIntent = new Intent(Constants.COM_SADWYN_UPDATE_WIDGET);
                         nextHeroIntent.putExtra(NEXT_HERO_ID, nextId);
                         nextHeroIntent.putExtra(NEXT_HERO_NAME, character.getName());
                         context.sendBroadcast(nextHeroIntent);
@@ -72,7 +72,7 @@ public class WidgetIntentReceiver extends BroadcastReceiver {
                 case INSTANT_ID_REQUEST :
                     int startID = intent.getIntExtra(HERO_START_ID,0);
                     character =  provider.getCharacterById(context,startID);
-                    Intent instantHeroIntent = new Intent("com.sadwyn.update.widget");
+                    Intent instantHeroIntent = new Intent(Constants.COM_SADWYN_UPDATE_WIDGET);
                     instantHeroIntent.putExtra(INSTANT_HERO_ID, startID);
                     instantHeroIntent.putExtra(INSTANT_HERO_NAME, character.getName());
                     context.sendBroadcast(instantHeroIntent);
