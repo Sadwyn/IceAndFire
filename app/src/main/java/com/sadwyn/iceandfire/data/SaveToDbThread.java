@@ -39,12 +39,12 @@ public class SaveToDbThread implements Runnable {
         values.put(COLUMN_MOTHER, character.getMother());
         values.put(COLUMN_DEAD, character.getDied());
 
-        int id = (int) writableDatabase.insert(HeroesDataContract.MainDataStructure.TABLE_NAME, null, values);
+        writableDatabase.insert(HeroesDataContract.MainDataStructure.TABLE_NAME, null, values);
 
         ContentValues aliases = new ContentValues();
         for (String alias : character.getAliases()) {
             aliases.put(HeroesDataContract.AliasesStructure.COLUMN_NICKNAME, alias);
-            aliases.put(HeroesDataContract.AliasesStructure.OUTER_KEY, id);
+            aliases.put(HeroesDataContract.AliasesStructure.OUTER_KEY, character.getName());
             writableDatabase.insert(HeroesDataContract.AliasesStructure.TABLE_NAME, null, aliases);
         }
         writableDatabase.close();

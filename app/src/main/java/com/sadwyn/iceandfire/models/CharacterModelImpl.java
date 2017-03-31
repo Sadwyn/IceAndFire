@@ -1,6 +1,7 @@
 package com.sadwyn.iceandfire.models;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 import com.sadwyn.iceandfire.App;
@@ -60,9 +61,8 @@ public class CharacterModelImpl implements CharacterModel {
     }
 
     @Override
-    public void deleteCharacterBySwipe(Context context, int id) {
+    public void deleteCharacterBySwipe(Context context, String name) {
         CharactersTable charactersTable = new CharactersTable(context);
-        charactersTable.deleteCharacterById(id);
-        //Сделать удаление по имени ане по id
+        charactersTable.deleteCharacterByName(name);
     }
 }

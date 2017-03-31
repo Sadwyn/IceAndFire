@@ -26,7 +26,9 @@ public interface Constants {
     String CURRENT_HERO_ID = "CURRENT_HERO_ID";
     String PREV_HERO_NAME = "PREV_HERO_NAME";
     String NEXT_HERO_NAME = "NEXT_HERO_NAME";
-    String INSTANT_ID = "INSTANT_ID";
+    String INSTANT_ID_REQUEST = "INSTANT_ID_REQUEST";
+    String INSTANT_HERO_ID = "INSTANT_HERO_ID";
+    String INSTANT_HERO_NAME = "INSTANT_HERO_NAME";
 
-
+    String HERO_START_ID = "HERO_START_ID";
 }

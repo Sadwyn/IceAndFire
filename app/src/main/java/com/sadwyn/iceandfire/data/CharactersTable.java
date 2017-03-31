@@ -25,13 +25,11 @@ public class CharactersTable {
         }
     }
 
-    public boolean deleteCharacterById(int id){
+    public boolean deleteCharacterByName(String name){
         SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
-
-        writableDatabase.delete("heroes", "_ID" + "='" + String.valueOf(id) + "'", null);
-        writableDatabase.delete("aliases", "outer" + "='" + String.valueOf(id) +"'", null);
+        writableDatabase.delete("heroes", "name" + "='" + name + "'", null);
+        writableDatabase.delete("aliases", "outer" + "='" + name +"'", null);
         writableDatabase.close();
-        Log.i("TAG", "DELETED");
         return true;
     }
 
@@ -81,7 +79,7 @@ public class CharactersTable {
                 String dead = cursor.getString(deadColumnIndex);
 
                 ArrayList<String> aliases = new ArrayList<>();
-                String selectQuery = "SELECT * FROM aliases WHERE outer = '"+id+"'";
+                String selectQuery = "SELECT * FROM aliases WHERE outer = '"+name+"'";
                 Cursor c = readableDatabase.rawQuery(selectQuery, null);
                 while (c.moveToNext())
                     aliases.add(c.getString(c.getColumnIndex("nickname")));

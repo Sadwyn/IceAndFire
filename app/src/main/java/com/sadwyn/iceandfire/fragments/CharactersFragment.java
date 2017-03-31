@@ -11,9 +11,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.models.CharacterModel;
@@ -22,6 +25,8 @@ import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
 import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
+import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,9 +121,12 @@ public class CharactersFragment extends Fragment implements CharacterView {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
             {
-                model.deleteCharacterBySwipe(getContext().getApplicationContext(), viewHolder.getAdapterPosition()+1);
+                View view = ((LinearLayout)(((CharactersAdapter.TextViewHolder)viewHolder).itemView)).getChildAt(0);
+                String name = ((TextView)view).getText().toString();
+                model.deleteCharacterBySwipe(getContext().getApplicationContext(), name);
                 presenter.getList().remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();
+                CharacterWidget.updateWidget(getContext().getApplicationContext());
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView);

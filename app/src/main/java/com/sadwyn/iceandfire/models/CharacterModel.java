@@ -12,5 +12,5 @@ public interface CharacterModel {
 
     List<Character> getCharacters(Context context);
 
-    void deleteCharacterBySwipe(Context context, int id);
+    void deleteCharacterBySwipe(Context context, String name);
 }

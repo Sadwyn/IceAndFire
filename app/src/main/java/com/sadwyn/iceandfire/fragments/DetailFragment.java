@@ -1,6 +1,7 @@
 package com.sadwyn.iceandfire.fragments;
 
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import org.parceler.Parcels;
 
@@ -70,14 +72,10 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
             initializeData();
             CharacterModelImpl model = CharacterModelImpl.getInstance();
             model.saveCharacterToDB(character, view.getContext());
-            updateWidget();
+            CharacterWidget.updateWidget(getContext().getApplicationContext());
         }
     }
 
-    private void updateWidget() {
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        getContext().sendBroadcast(intent);
-    }
 
     private void initializeData() {
         bornText.setText(getString(R.string.bornText, character.getBorn()));

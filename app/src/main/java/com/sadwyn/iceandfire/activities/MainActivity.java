@@ -1,12 +1,9 @@
 package com.sadwyn.iceandfire.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.ViewManager;
 import android.widget.Toast;
 
@@ -26,7 +22,6 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
-import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
@@ -42,16 +37,7 @@ import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
-import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
-import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
-import static com.sadwyn.iceandfire.Constants.INSTANT_ID;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
-import static com.sadwyn.iceandfire.Constants.NEXT_HERO_ID;
-import static com.sadwyn.iceandfire.Constants.NEXT_HERO_NAME;
-import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
-import static com.sadwyn.iceandfire.Constants.PREV_HERO_ID;
-import static com.sadwyn.iceandfire.Constants.PREV_HERO_NAME;
-import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;

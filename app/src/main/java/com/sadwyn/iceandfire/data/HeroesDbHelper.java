@@ -43,7 +43,7 @@ public class HeroesDbHelper extends SQLiteOpenHelper {
     private void updateDBtoSecondVersion(SQLiteDatabase db) {
         String SQL_CREATE_ALIASES_TABLE = "CREATE TABLE " + HeroesDataContract.AliasesStructure.TABLE_NAME + " ("
                 + HeroesDataContract.AliasesStructure._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + HeroesDataContract.AliasesStructure.OUTER_KEY + " INTEGER, "
+                + HeroesDataContract.AliasesStructure.OUTER_KEY + " TEXT, "
                 + HeroesDataContract.AliasesStructure.COLUMN_NICKNAME + " TEXT);";
 
         db.execSQL(SQL_CREATE_ALIASES_TABLE);

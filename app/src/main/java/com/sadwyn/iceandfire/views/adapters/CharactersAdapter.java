@@ -81,7 +81,7 @@ public class CharactersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class TextViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+   public class TextViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.character_text_item) TextView name;
         @Override

@@ -6,17 +6,22 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
-import com.sadwyn.iceandfire.content_providers.DataProviderImpl;
+import com.sadwyn.iceandfire.content_providers.WidgetHelper;
+
+import java.util.ArrayList;
 
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
+import static com.sadwyn.iceandfire.Constants.HERO_START_ID;
 import static com.sadwyn.iceandfire.Constants.INCOMING_INTENT;
-import static com.sadwyn.iceandfire.Constants.INSTANT_ID;
+import static com.sadwyn.iceandfire.Constants.INSTANT_HERO_ID;
+import static com.sadwyn.iceandfire.Constants.INSTANT_HERO_NAME;
+import static com.sadwyn.iceandfire.Constants.INSTANT_ID_REQUEST;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_NAME;
 import static com.sadwyn.iceandfire.Constants.NEXT_HERO_SWITCH;
@@ -31,17 +36,18 @@ public class CharacterWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        DataProviderImpl provider = new DataProviderImpl();
-        int count = provider.getCharactersCount(context);
-        if(count!=0) {
+        WidgetHelper provider = new WidgetHelper();
+        ArrayList<Integer> charactersIds = provider.getCharactersIds(context);
+        if(charactersIds.size()!=0) {
 
             Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
 
             Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
-            instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID);
-            instantIdRequest.putExtra("HERO_START_ID", Math.round(count/2f));
+            instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
+            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get((Math.round((charactersIds.size())/2f))-1));
+
 
             nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
             prevRequest.putExtra(INCOMING_INTENT, PREV_HERO_SWITCH);
@@ -93,6 +99,7 @@ public class CharacterWidget extends AppWidgetProvider {
         Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
         nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
         nameRequest.setAction(WIDGET_INFO_GOTH);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context.getApplicationContext());
@@ -109,9 +116,9 @@ public class CharacterWidget extends AppWidgetProvider {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(NEXT_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(NEXT_HERO_NAME));
             }
-            else if(intent.hasExtra("INSTANT_HERO_ID")){
-                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra("INSTANT_HERO_ID",0));
-                views.setTextViewText(R.id.characterName, intent.getStringExtra("INSTANT_HERO_NAME"));
+            else if(intent.hasExtra(INSTANT_HERO_ID)){
+                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID,0));
+                views.setTextViewText(R.id.characterName, intent.getStringExtra(INSTANT_HERO_NAME));
             }
 
             PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -119,6 +126,10 @@ public class CharacterWidget extends AppWidgetProvider {
 
             appWidgetManager.updateAppWidget(appWidgetIds, views);
         }
+    }
+    public static void updateWidget(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        context.sendBroadcast(intent);
     }
 }
 

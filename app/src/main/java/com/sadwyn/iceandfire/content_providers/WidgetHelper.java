@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.activities.WidgetDetailActivity;
@@ -18,18 +19,22 @@ import java.util.ArrayList;
 import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;
 
 
-public class DataProviderImpl {
+public class WidgetHelper {
 
-    public int getCharactersCount(Context context){
+    public ArrayList<Integer> getCharactersIds(Context context){
+        ArrayList<Integer> charactersIds = new ArrayList<>();
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/characters"),
                 null, null, null, null, null);
         if(cursor!=null){
-            int count =  cursor.getCount();
+            while (cursor.moveToNext()){
+               int id = cursor.getInt(0);
+                Log.i("TaG", String.valueOf(id));
+                charactersIds.add(id);
+            }
             cursor.close();
-            return count;
         }
-        else return 0;
+        return charactersIds;
     }
 
     public void showDetailsOfChosenHero(Context context, Character character) {
