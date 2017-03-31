@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,8 +122,10 @@ public class CharactersFragment extends Fragment implements CharacterView {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
             {
-                View view = ((LinearLayout)(((CharactersAdapter.TextViewHolder)viewHolder).itemView)).getChildAt(0);
-                String name = ((TextView)view).getText().toString();
+                LinearLayout layout = ((LinearLayout)(((CharactersAdapter.TextViewHolder)viewHolder).itemView));
+                CardView cardView = (CardView)layout.getChildAt(0);
+                TextView textView = (TextView) cardView.getChildAt(0);
+                String name = textView.getText().toString();
                 model.deleteCharacterBySwipe(getContext().getApplicationContext(), name);
                 presenter.getList().remove(viewHolder.getAdapterPosition());
                 adapter.notifyDataSetChanged();

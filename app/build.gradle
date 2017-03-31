@@ -92,6 +92,7 @@ dependencies {
     compile group: 'net.sourceforge.javacsv', name: 'javacsv', version: '2.0'
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
     compile "com.android.support:support-annotations:$supportVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"

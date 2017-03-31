@@ -54,6 +54,7 @@ public class CharacterWidget extends AppWidgetProvider {
             currentListId = preferences.getInt(Constants.CURRENT_LIST_ID,  Math.round((charactersIds.size())/2f));
 
 
+
             instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
 
 
