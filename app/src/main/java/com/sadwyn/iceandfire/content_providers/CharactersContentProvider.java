@@ -30,7 +30,7 @@ public class CharactersContentProvider extends ContentProvider {
         uriMatcher.addURI(HeroesDataContract.AUTHORITY, "characters", CHARACTERS);
         uriMatcher.addURI(HeroesDataContract.AUTHORITY, "characters/#", CHARACTERS_ID);
         uriMatcher.addURI(HeroesDataContract.AUTHORITY, "aliases", ALIASES);
-        uriMatcher.addURI(HeroesDataContract.AUTHORITY, "aliases/#", ALIASES_ID);
+        uriMatcher.addURI(HeroesDataContract.AUTHORITY, "aliases/*", ALIASES_ID);
     }
 
     private HeroesDbHelper heroesDbHelper;
@@ -67,7 +67,7 @@ public class CharactersContentProvider extends ContentProvider {
             }
             case ALIASES_ID : {
                 selection = AliasesStructure.OUTER_KEY + "=?";
-                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[]{String.valueOf(uri.getLastPathSegment())};
                 cursor = database.query(AliasesStructure.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 

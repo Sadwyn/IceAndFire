@@ -1,4 +1,4 @@
-package com.sadwyn.iceandfire.content_providers;
+package com.sadwyn.iceandfire.views.widgets;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -29,7 +29,6 @@ public class WidgetHelper {
         if(cursor!=null){
             while (cursor.moveToNext()){
                int id = cursor.getInt(0);
-                Log.i("TaG", String.valueOf(id));
                 charactersIds.add(id);
             }
             cursor.close();
@@ -46,6 +45,7 @@ public class WidgetHelper {
     }
 
     public Character getCharacterById(Context context, int targetId) {
+        String name = "";
         Character character = new Character();
         ContentResolver resolver = context.getContentResolver();
         Cursor mainCursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/characters/"+targetId),
@@ -63,11 +63,12 @@ public class WidgetHelper {
                     character.setDied(mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_DEAD)));
                 }
             } finally {
+                name = mainCursor.getString(mainCursor.getColumnIndex(HeroesDataContract.MainDataStructure.COLUMN_NAME));
                 mainCursor.close();
             }
         }
 
-        Cursor aliasesCursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/aliases/"+targetId),
+        Cursor aliasesCursor = resolver.query(Uri.parse("content://com.sadwyn.iceandfire.provider.contract/aliases/"+name),
                 null, null, null, null, null);
         ArrayList<String> aliases = new ArrayList<>();
         if (aliasesCursor != null)

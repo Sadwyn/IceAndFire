@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onPause();
     }
 
+
     @Override
     public void onItemClick(Character character) {
         replaceFragment(DetailFragment.newInstance(character), true, DETAIL_FRAGMENT_TAG);
@@ -184,5 +185,4 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
             }
         }
     }
-
 }

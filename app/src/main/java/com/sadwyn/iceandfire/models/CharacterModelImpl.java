@@ -8,10 +8,14 @@ import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.data.CharactersTable;
 import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.security.AccessController.getContext;
 
 public class CharacterModelImpl implements CharacterModel {
     private static CharacterModelImpl model;

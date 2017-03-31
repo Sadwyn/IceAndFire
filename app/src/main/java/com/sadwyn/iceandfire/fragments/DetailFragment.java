@@ -72,7 +72,6 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
             initializeData();
             CharacterModelImpl model = CharacterModelImpl.getInstance();
             model.saveCharacterToDB(character, view.getContext());
-            CharacterWidget.updateWidget(getContext().getApplicationContext());
         }
     }
 

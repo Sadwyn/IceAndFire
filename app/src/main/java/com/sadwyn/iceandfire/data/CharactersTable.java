@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +14,18 @@ import java.util.List;
 public class CharactersTable {
 
     private HeroesDbHelper dbHelper;
+    private Context context;
 
     public CharactersTable(Context context) {
         dbHelper = new HeroesDbHelper(context);
+        this.context = context;
     }
 
     public void saveCharacterToDB(Character character){
         if(!isHeroAlreadySaved(character)) {
         Thread saveCharacter = new Thread(new SaveToDbThread(character, dbHelper));
         saveCharacter.start();
+        CharacterWidget.updateWidget(context.getApplicationContext());
         }
     }
 

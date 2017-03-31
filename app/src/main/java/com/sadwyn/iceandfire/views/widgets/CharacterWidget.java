@@ -8,10 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
-import com.sadwyn.iceandfire.content_providers.WidgetHelper;
 
 import java.util.ArrayList;
 
@@ -31,22 +29,25 @@ import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.WIDGET_INFO_GOTH;
 
 public class CharacterWidget extends AppWidgetProvider {
-
+    public static int currentListId;
+    public static ArrayList<Integer> charactersIds;
+    public static int listSize;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         WidgetHelper provider = new WidgetHelper();
-        ArrayList<Integer> charactersIds = provider.getCharactersIds(context);
+         charactersIds = provider.getCharactersIds(context);
         if(charactersIds.size()!=0) {
-
+            listSize = charactersIds.size();
             Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
 
             Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
             instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
-            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get((Math.round((charactersIds.size())/2f))-1));
+            currentListId = (Math.round((charactersIds.size())/2f)) ;
+            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
 
 
             nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
@@ -72,7 +73,7 @@ public class CharacterWidget extends AppWidgetProvider {
         else {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
             views.setTextViewText(R.id.characterName, "No Heroes in database");
-            appWidgetManager.updateAppWidget(appWidgetIds, views );
+            appWidgetManager.updateAppWidget(appWidgetIds, views);
         }
     }
 
@@ -117,7 +118,7 @@ public class CharacterWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(NEXT_HERO_NAME));
             }
             else if(intent.hasExtra(INSTANT_HERO_ID)){
-                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID,0));
+                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID, 0));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(INSTANT_HERO_NAME));
             }
 
