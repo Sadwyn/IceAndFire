@@ -25,7 +25,12 @@ public class CharactersTable {
         if(!isHeroAlreadySaved(character)) {
         Thread saveCharacter = new Thread(new SaveToDbThread(character, dbHelper));
         saveCharacter.start();
-        CharacterWidget.updateWidget(context.getApplicationContext());
+            try {
+                saveCharacter.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            CharacterWidget.updateWidget(context.getApplicationContext());
         }
     }
 

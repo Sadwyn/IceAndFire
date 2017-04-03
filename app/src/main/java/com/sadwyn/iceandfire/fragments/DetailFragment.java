@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.data.CharactersTable;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
@@ -71,6 +72,7 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
         if (character != null) {
             initializeData();
             CharacterModelImpl model = CharacterModelImpl.getInstance();
+            if(getActivity() instanceof MainActivity)
             model.saveCharacterToDB(character, view.getContext());
         }
     }

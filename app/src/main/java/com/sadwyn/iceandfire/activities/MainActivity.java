@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import com.sadwyn.iceandfire.utils.LocaleUtils;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 import com.sadwyn.iceandfire.views.widgets.WidgetHelper;
 
+import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.Locale;
@@ -131,6 +133,11 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         transaction.commit();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelable("DRAWER_RESULT", Parcels.wrap(drawer));
+    }
 
     @Override
     public void changeLanguage() {

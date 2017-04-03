@@ -32,7 +32,7 @@ import static com.sadwyn.iceandfire.Constants.PREV_HERO_SWITCH;
 import static com.sadwyn.iceandfire.Constants.WIDGET_INFO_GOTH;
 
 public class CharacterWidget extends AppWidgetProvider {
-    public static int currentListId;
+    public static int currentListId = 1;
     public static ArrayList<Integer> charactersIds;
     public static int listSize;
 
@@ -41,7 +41,7 @@ public class CharacterWidget extends AppWidgetProvider {
 
         WidgetHelper provider = new WidgetHelper();
          charactersIds = provider.getCharactersIds(context);
-        if(charactersIds.size()!=0) {
+        if(charactersIds.size() != 0) {
             listSize = charactersIds.size();
             Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
             Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
@@ -50,13 +50,7 @@ public class CharacterWidget extends AppWidgetProvider {
             Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
             instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            currentListId = preferences.getInt(Constants.CURRENT_LIST_ID,  Math.round((charactersIds.size())/2f));
-
-
-
-            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
-
+            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId-1));
 
             nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
             prevRequest.putExtra(INCOMING_INTENT, PREV_HERO_SWITCH);
