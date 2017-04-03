@@ -12,7 +12,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.activities.MainActivity;
+import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
-import com.sadwyn.iceandfire.activities.MainActivity;
-import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
-import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,9 +102,12 @@ public class CharactersFragment extends Fragment implements CharacterView {
              adapter.setError(true);
          }
         RecyclerView.LayoutManager layoutManager;
-        boolean isDemoVersion = !getResources().getBoolean(R.bool.isDemoVersion);
-        layoutManager = isDemoVersion && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ?
-                new GridLayoutManager(getActivity().getApplicationContext(), DEFAULT_SPAN_COUNT) : new LinearLayoutManager(getActivity().getApplicationContext());
+        boolean isDemoVersion = getResources().getBoolean(R.bool.isDemoVersion);
+        if (!isDemoVersion && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), DEFAULT_SPAN_COUNT);
+
+        }
+        else layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         if(!isRemoteStorage())
             addOnSwipeItemListener();
@@ -113,9 +117,22 @@ public class CharactersFragment extends Fragment implements CharacterView {
 
     private void addOnSwipeItemListener() {
         ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.UP|ItemTouchHelper.DOWN, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+
+            int dragFrom = -1;
+            int dragTo = -1;
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                if(dragFrom == -1) {
+                    dragFrom =  fromPosition;
+                }
+                dragTo = toPosition;
+                List<Character> list = getPresenter().getList();
+                list.add(toPosition, list.remove(fromPosition));
+                adapter.notifyItemMoved(fromPosition, toPosition);
                 return false;
             }
 
@@ -128,8 +145,19 @@ public class CharactersFragment extends Fragment implements CharacterView {
                 String name = textView.getText().toString();
                 model.deleteCharacterBySwipe(getContext().getApplicationContext(), name);
                 presenter.getList().remove(viewHolder.getAdapterPosition());
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 CharacterWidget.updateWidget(getContext().getApplicationContext());
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeMovementFlags(ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END,
+                        ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
+            }
+
+            @Override
+            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(recyclerView);
@@ -170,6 +198,4 @@ public class CharactersFragment extends Fragment implements CharacterView {
         adapter.setError(isError);
         adapter.notifyDataSetChanged();
     }
-
-
 }

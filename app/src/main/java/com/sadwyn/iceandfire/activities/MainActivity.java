@@ -55,28 +55,16 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        restoreSavedLocale();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        drawer = intitializeDrawer(toolbar);
 
-        if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
-            ((ViewManager)toolbar.getParent()).removeView(toolbar);
-            Character character = Parcels.unwrap(getIntent().getParcelableExtra(Constants.WRAPPED_CHARACTER_FROM_RECEIVER));
-            replaceFragment(DetailFragment.newInstance(character), false, DETAIL_FRAGMENT_TAG);
-        }
-        else {
-            restoreSavedLocale();
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            drawer = intitializeDrawer(toolbar);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
 
-            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
-
-            if (fragment == null)
+        if (fragment == null)
                 replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
-        }
-
     }
 
     @Override
@@ -126,8 +114,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     @Override
     protected void onPause() {
-        if(getIntent().getBooleanExtra(START_DETAIL_FROM_WIDGET, false))
-            finish();
         super.onPause();
     }
 
