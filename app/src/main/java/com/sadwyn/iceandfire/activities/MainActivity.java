@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                              replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG),true , CHARACTERS_FRAGMENT_TAG);
                     }
                     else if(position == 2){
-                         replaceFragment(SettingsFragment.newInstance(),true , SETTINGS_FRAGMENT_TAG);
+                         replaceFragment(SettingsFragment.newInstance() ,true , SETTINGS_FRAGMENT_TAG);
                     }
                 }).build();
     }
