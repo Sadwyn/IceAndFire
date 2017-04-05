@@ -2,7 +2,6 @@ package com.sadwyn.iceandfire.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,13 +14,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.view.ViewManager;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
@@ -32,9 +29,7 @@ import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
-import com.sadwyn.iceandfire.views.widgets.WidgetHelper;
 
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.Locale;
@@ -44,7 +39,6 @@ import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
-import static com.sadwyn.iceandfire.Constants.START_DETAIL_FROM_WIDGET;
 
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
@@ -61,40 +55,40 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        drawer = intitializeDrawer(toolbar);
+        drawer = initializeDrawer(toolbar);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
 
         if (fragment == null)
-                replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+            replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
     }
 
     @Override
     public void onBackPressed() {
 
-        if(drawer!=null && drawer.isDrawerOpen()) drawer.closeDrawer();
-
-        else if(getSupportFragmentManager().findFragmentById(R.id.fragContainer)==
-                getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG))
+        if (drawer != null && drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else if (getSupportFragmentManager().findFragmentById(R.id.fragContainer) ==
+                getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG)) {
             super.onBackPressed();
-
-       else {
+        } else {
             if (doubleBackToExitPressedOnce) {
                 Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                 homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
-                return;
             }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+            else {
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+                new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+            }
         }
     }
 
-    private Drawer.Result intitializeDrawer(Toolbar toolbar) {
-      return new Drawer()
+    private Drawer.Result initializeDrawer(Toolbar toolbar) {
+        return new Drawer()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
@@ -105,11 +99,10 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                                 withIcon(FontAwesome.Icon.faw_wrench).withIdentifier(2)
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
-                     if(position == 1){
-                             replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG),true , CHARACTERS_FRAGMENT_TAG);
-                    }
-                    else if(position == 2){
-                         replaceFragment(SettingsFragment.newInstance() ,true , SETTINGS_FRAGMENT_TAG);
+                    if (position == 1) {
+                        replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG), true, CHARACTERS_FRAGMENT_TAG);
+                    } else if (position == 2) {
+                        replaceFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
                     }
                 }).build();
     }

@@ -39,8 +39,8 @@ public class CharacterWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        WidgetHelper provider = new WidgetHelper();
-         charactersIds = provider.getCharactersIds(context);
+        WidgetHelper widgetHelper = new WidgetHelper();
+         charactersIds = widgetHelper.getCharactersIds(context);
         if(charactersIds.size() != 0) {
             listSize = charactersIds.size();
             Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
