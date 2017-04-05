@@ -9,10 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@drawable/widget_arrow_left_background"
-        />
-
-
+        android:background="@drawable/widget_arrow_left_background" />
     <TextView
         android:id="@+id/characterName"
         android:layout_width="196dp"
@@ -22,14 +19,12 @@
         android:layout_weight="1"
         android:clickable="true"
         android:textColor="@color/gray"
-        android:fontFamily="monospace"
-        />
+        android:fontFamily="monospace" />
 
     <ImageButton
         android:id="@+id/nextCharacter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@drawable/widget_arrow_right_bacground"
-        />
+        android:background="@drawable/widget_arrow_right_bacground" />
 </LinearLayout>

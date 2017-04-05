@@ -1,15 +1,17 @@
 package com.sadwyn.iceandfire.fragments;
 
-import android.appwidget.AppWidgetManager;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +20,10 @@ import android.widget.TextView;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
-import com.sadwyn.iceandfire.data.CharactersTable;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
-import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import org.parceler.Parcels;
 
@@ -32,31 +32,40 @@ import butterknife.ButterKnife;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTER_KEY;
 
-public class DetailFragment extends Fragment implements DetailBackgroundView{
-    private static final String TAG = "TAG";
+public class DetailFragment extends DialogFragment implements DetailBackgroundView {
 
-    @BindView(R.id.detail_layout) PercentRelativeLayout detail_fragment_layout;
-    @BindView(R.id.bornText) TextView bornText;
-    @BindView(R.id.cultureText) TextView cultureText;
-    @BindView(R.id.genderText) TextView genderText;
-    @BindView(R.id.diedText) TextView diedText;
-    @BindView(R.id.motherText) TextView motherText;
-    @BindView(R.id.fatherText) TextView fatherText;
-    @BindView(R.id.titles) RecyclerView recyclerView;
-    @BindView(R.id.aliases) TextView aliases;
+    @BindView(R.id.detail_layout)
+    PercentRelativeLayout detail_fragment_layout;
+    @BindView(R.id.bornText)
+    TextView bornText;
+    @BindView(R.id.cultureText)
+    TextView cultureText;
+    @BindView(R.id.genderText)
+    TextView genderText;
+    @BindView(R.id.diedText)
+    TextView diedText;
+    @BindView(R.id.motherText)
+    TextView motherText;
+    @BindView(R.id.fatherText)
+    TextView fatherText;
+    @BindView(R.id.titles)
+    RecyclerView recyclerView;
+    @BindView(R.id.aliases)
+    TextView aliases;
 
     private Character character;
     private DetailBackgroundPresenter backgroundPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        backgroundPresenter = new DetailBackgroundPresenter(this.getActivity().getApplicationContext() ,this);
 
+        super.onCreate(savedInstanceState);
+        backgroundPresenter = new DetailBackgroundPresenter(this.getActivity().getApplicationContext(), this);
         if (getArguments() != null) {
             character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
         }
     }
+
 
     @Nullable
     @Override
@@ -68,15 +77,14 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        backgroundPresenter.onViewCreated(view,savedInstanceState);
+        backgroundPresenter.onViewCreated(view, savedInstanceState);
         if (character != null) {
             initializeData();
             CharacterModelImpl model = CharacterModelImpl.getInstance();
-            if(getActivity() instanceof MainActivity)
-            model.saveCharacterToDB(character, view.getContext());
+            if (getActivity() instanceof MainActivity)
+                model.saveCharacterToDB(character, view.getContext());
         }
     }
-
 
     private void initializeData() {
         bornText.setText(getString(R.string.bornText, character.getBorn()));
@@ -88,22 +96,20 @@ public class DetailFragment extends Fragment implements DetailBackgroundView{
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        if(!character.getAliases().isEmpty())
-            aliases.setText(R.string.aliases);
+        if (!character.getAliases().isEmpty()) aliases.setText(R.string.aliases);
         DetailsAdapter adapter = new DetailsAdapter(character.getAliases());
         recyclerView.setAdapter(adapter);
     }
-
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
 
-    public static DetailFragment newInstance(Character character){
+    public static DetailFragment newInstance(Character character) {
         Bundle bundle = new Bundle();
         DetailFragment detailFragment = new DetailFragment();
-        bundle.putParcelable(CHARACTER_KEY,Parcels.wrap(character));
+        bundle.putParcelable(CHARACTER_KEY, Parcels.wrap(character));
         detailFragment.setArguments(bundle);
         return detailFragment;
     }

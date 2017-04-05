@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -115,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     @Override
     public void onItemClick(Character character) {
-        replaceFragment(DetailFragment.newInstance(character), true, DETAIL_FRAGMENT_TAG);
+        DetailFragment detailFragment = DetailFragment.newInstance(character);
+        detailFragment.show(getSupportFragmentManager(), DETAIL_FRAGMENT_TAG);
     }
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack, String TAG) {

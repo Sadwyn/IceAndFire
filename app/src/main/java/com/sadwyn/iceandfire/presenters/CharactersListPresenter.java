@@ -33,9 +33,9 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
     private final int size = 50;
     private int page;
 
-    private Call<List<Character>> call;
     private Context context;
     private CharacterModel characterModel;
+
 
     private CharacterView characterFragmentView;
 
@@ -62,9 +62,7 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
 
     @Override
     public void onDestroyView() {
-        if(call != null){
-            call.cancel();
-        }
+        if(characterModel.getCall()!=null) characterModel.getCall().cancel();
     }
 
     @Override
