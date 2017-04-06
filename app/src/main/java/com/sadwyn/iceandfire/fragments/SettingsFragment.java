@@ -62,7 +62,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
 
             intent = new Intent(context, ExportDataService.class);
             CharacterModelImpl model = CharacterModelImpl.getInstance();
-            List<Character> characterList = model.getCharacters(context);
+            List<Character> characterList = model.getCharactersList(context);
             intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(characterList));
 
             if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),

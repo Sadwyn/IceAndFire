@@ -5,6 +5,7 @@ import com.sadwyn.iceandfire.models.Character;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -12,5 +13,5 @@ import retrofit2.http.Query;
 
 public interface Api {
     @GET("/api/characters")
-    Call<List<Character>> getData(@Query("page") int page, @Query("size") int size);
+    Observable<List<Character>> getData(@Query("page") int page, @Query("size") int size);
 }

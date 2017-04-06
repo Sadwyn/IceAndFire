@@ -11,6 +11,8 @@ import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+
 public class CharactersTable {
 
     private HeroesDbHelper dbHelper;
@@ -55,7 +57,7 @@ public class CharactersTable {
     }
 
     public List<Character> getCharactersFromDB() {
-        List<Character> result = new ArrayList<>();
+        List<Character> listResult = new ArrayList<>();
         SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
 
         Cursor cursor = readableDatabase.query(
@@ -105,13 +107,14 @@ public class CharactersTable {
                 character.setDied(dead);
                 character.setAliases(aliases);
 
-                result.add(character);
+                listResult.add(character);
             }
         }
         finally {
             cursor.close();
             readableDatabase.close();
         }
-        return result;
+
+        return listResult;
     }
 }

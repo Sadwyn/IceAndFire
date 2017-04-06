@@ -47,7 +47,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     private CharactersAdapter adapter;
     private CharactersListPresenter presenter;
     private RecyclerView.OnScrollListener supportListener;
-    CharacterModel model;
+    private CharacterModel model;
 
     public CharactersListPresenter getPresenter() {
         return presenter;
@@ -56,8 +56,8 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
         model = CharacterModelImpl.getInstance();
+        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
     }
 
     @Nullable
@@ -76,10 +76,10 @@ public class CharactersFragment extends Fragment implements CharacterView {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        ButterKnife.bind(this, view);
         adapter = new CharactersAdapter(presenter.getList(), callback);
         presenter.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+
 
          if(isRemoteStorage()) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

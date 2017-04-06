@@ -73,7 +73,7 @@ public class CharactersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-     class ProgressHolder extends RecyclerView.ViewHolder{
+    public class ProgressHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.progressBar) ProgressBar progressBar;
         ProgressHolder(View itemView) {
             super(itemView);

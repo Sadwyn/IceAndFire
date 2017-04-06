@@ -20,7 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-
+import io.reactivex.Observable;
 
 
 public class ExportDataService extends IntentService {
@@ -66,7 +66,7 @@ public class ExportDataService extends IntentService {
     }
 
 
-    private String writeDataInCSV(List<Character> list) throws IOException {
+    private String writeDataInCSV(List<Character> listObservable) throws IOException {
 
             String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
             String fileName = "HeroesData.csv";
@@ -77,7 +77,7 @@ public class ExportDataService extends IntentService {
             writer = new CsvWriter(mFileWriter,',');
             StringBuilder builder = new StringBuilder();
 
-            for (Character person : list) {
+            for (Character person : listObservable) {
                 writePerson(writer, builder, person);
             }
             writer.flush();

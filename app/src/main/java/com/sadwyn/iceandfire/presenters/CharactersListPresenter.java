@@ -3,7 +3,9 @@ package com.sadwyn.iceandfire.presenters;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.models.FailureRequestCallback;
@@ -13,6 +15,8 @@ import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.models.ResultListCallback;
 
 import org.parceler.Parcels;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,9 +24,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.schedulers.SingleScheduler;
+import io.reactivex.observers.DisposableObserver;
 
-public class CharactersListPresenter extends BasePresenter implements ResultListCallback, FailureRequestCallback {
+public class CharactersListPresenter extends BasePresenter implements FailureRequestCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
     public static final String LIST_KEY = "LIST_KEY";
@@ -34,16 +43,18 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
     private int page;
 
     private Context context;
-    private CharacterModel characterModel;
-
+    private CharacterModelImpl characterModel;
 
     private CharacterView characterFragmentView;
+    private CompositeDisposable disposables;
+
 
     public CharactersListPresenter(Context context, CharacterView characterFragmentView) {
+        initializeData();
         this.context = context;
         this.characterFragmentView = characterFragmentView;
         this.characterModel = CharacterModelImpl.getInstance();
-        initializeData();
+        disposables = new CompositeDisposable();
     }
 
     public List<Character> getList() {
@@ -53,21 +64,49 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-        if(getList().isEmpty()) {
+        System.out.println("OnViewCreated");
+        if (getList().isEmpty()) {
             if (bundle == null)
-                characterModel.getCharactersList(page, size, view.getContext(), this, this);
-            else restoreData(bundle);
+               disposables.add(characterModel.getCharactersList(page, size, view.getContext(), this).subscribeWith(getObserver()));
+             else
+                restoreData(bundle);
         }
+    }
+
+    public DisposableObserver<List<Character>> getObserver() {
+        return new DisposableObserver<List<Character>>() {
+            @Override
+            public void onNext(List<Character> value) {
+                for (Character person : value) {
+                    if (person != null && !person.getName().equals(""))
+                        set.add(person);
+                }
+                list.addAll(set);
+                set.clear();
+                characterFragmentView.showCharactersList(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
     }
 
     @Override
     public void onDestroyView() {
-        if(characterModel.getCall()!=null) characterModel.getCall().cancel();
+        if(disposables != null && disposables.isDisposed())
+        disposables.clear();
     }
 
     @Override
     public void onSaveInstanceState(Bundle bundle) {
-        bundle.putInt(PAGE_KEY,page);
+        bundle.putInt(PAGE_KEY, page);
         bundle.putParcelable(LIST_KEY, Parcels.wrap(list));
     }
 
@@ -80,30 +119,18 @@ public class CharactersListPresenter extends BasePresenter implements ResultList
         page = 1;
         list = new ArrayList<>();
         set = new LinkedHashSet<>();
+
     }
 
-    private void setInfoToView(List<Character> characters){
-            for (Character person : characters) {
-                if (person != null && !person.getName().equals(""))
-                    set.add(person);
-            }
-            list.addAll(set);
-            set.clear();
-            characterFragmentView.showCharactersList(false);
-    }
 
     public void addNewData() {
         page++;
-        characterModel.getCharactersList(page, size, context, this, this);
+        disposables.add(characterModel.getCharactersList(page, size, context, this).subscribeWith(getObserver()));
     }
 
-    @Override
-    public void onListRequest(List<Character> characters) {
-        setInfoToView(characters);
-    }
 
     @Override
     public void onFailureRequest() {
-      characterFragmentView.showCharactersList(true);
+        characterFragmentView.showCharactersList(true);
     }
 }
