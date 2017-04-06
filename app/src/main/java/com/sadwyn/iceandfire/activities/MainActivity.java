@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         setContentView(R.layout.activity_main);
         restoreSavedLocale();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawer = initializeDrawer(toolbar);
@@ -162,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         CharactersFragment charactersFragment = (CharactersFragment) manager.findFragmentByTag(CHARACTERS_FRAGMENT_TAG);
         charactersFragment.getPresenter().initializeData();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

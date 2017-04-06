@@ -11,6 +11,7 @@ import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
 import com.sadwyn.iceandfire.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -93,5 +94,11 @@ public class CharactersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
+    }
+
+    public void setFilter(List<Character> characterModels) {
+        listOfCharacters = new ArrayList<>();
+        listOfCharacters.addAll(characterModels);
+        notifyDataSetChanged();
     }
 }

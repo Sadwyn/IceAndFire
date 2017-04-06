@@ -20,6 +20,7 @@
     <string name="data_sources_key" translatable="false">data_sources</string>
     <string name="exportDataButtonTitle">Export From Database</string>
     <string name="exportButtonKey" translatable="false">exportButtonKey</string>
+    <string name="search">Search</string>
 
 
 </resources>

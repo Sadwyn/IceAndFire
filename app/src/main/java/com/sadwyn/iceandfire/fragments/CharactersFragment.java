@@ -6,14 +6,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,6 +34,7 @@ import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,6 +62,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         model = CharacterModelImpl.getInstance();
         presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
     }
@@ -72,6 +79,39 @@ public class CharactersFragment extends Fragment implements CharacterView {
         if (context instanceof MainActivity) {
             callback = (MainActivity) context;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                final List<Character> filteredModelList = filter(presenter.getList(), newText);
+                adapter.setFilter(filteredModelList);
+                return false;
+            }
+        });
+    }
+
+
+    private List<Character> filter(List<Character> models, String query) {
+        query = query.toLowerCase();
+        final List<Character> filteredModelList = new ArrayList<>();
+        for (Character model : models) {
+            final String text = model.getName().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 
     @Override
