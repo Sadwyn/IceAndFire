@@ -90,28 +90,16 @@ public class CharactersFragment extends Fragment implements CharacterView {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                adapter.setError(false);
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                final List<Character> filteredModelList = filter(presenter.getList(), newText);
-                adapter.setFilter(filteredModelList);
+                adapter.setError(true);
+                adapter.getFilter().filter(newText);
                 return false;
             }
         });
-    }
-
-
-    private List<Character> filter(List<Character> models, String query) {
-        query = query.toLowerCase();
-        final List<Character> filteredModelList = new ArrayList<>();
-        for (Character model : models) {
-            final String text = model.getName().toLowerCase();
-            if (text.contains(query)) {
-                filteredModelList.add(model);
-            }
-        }
-        return filteredModelList;
     }
 
     @Override

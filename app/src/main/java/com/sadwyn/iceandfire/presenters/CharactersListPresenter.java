@@ -64,7 +64,6 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
     @Override
     public void onViewCreated(View view, Bundle bundle) {
-        System.out.println("OnViewCreated");
         if (getList().isEmpty()) {
             if (bundle == null)
                disposables.add(characterModel.getCharactersList(page, size, view.getContext(), this).subscribeWith(getObserver()));

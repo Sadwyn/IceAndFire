@@ -14,8 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.view.Menu;
 import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -59,16 +57,21 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         drawer = initializeDrawer(toolbar);
-
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
 
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+        setSelectedItemInDrawer(fragment);
+    }
+
+    private void setSelectedItemInDrawer(Fragment fragment) {
+        if(fragment == getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG))
+            drawer.setSelection(0);
+        else drawer.setSelection(1);
     }
 
     @Override
     public void onBackPressed() {
-
         if (drawer != null && drawer.isDrawerOpen()) {
             drawer.closeDrawer();
         } else if (getSupportFragmentManager().findFragmentById(R.id.fragContainer) ==
@@ -80,8 +83,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
-            }
-            else {
+            } else {
                 this.doubleBackToExitPressedOnce = true;
                 Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
                 .withHeader(R.layout.drawer_header)
+                .withDrawerWidthDp(300)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_characters).withIdentifier(1).withIcon(FontAwesome.Icon.faw_home),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_settings).
@@ -109,12 +112,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                     }
                 }).build();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
 
     @Override
     public void onItemClick(Character character) {
