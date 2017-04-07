@@ -4,9 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.sadwyn.iceandfire.data.HeroesDataContract;
-import com.sadwyn.iceandfire.data.HeroesDbHelper;
 import com.sadwyn.iceandfire.network.Api;
+import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
+import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -22,11 +22,17 @@ public class App extends Application {
     private static Api api;
     private boolean isLoggerEnabled = false;
     private RefWatcher refWatcher;
+    private static InstanceDagger instanceDagger;
+
 
 
     public static RefWatcher getRefWatcher(Context context) {
        App application = (App) context.getApplicationContext();
         return application.refWatcher;
+    }
+
+    public static InstanceDagger getInstanceDagger() {
+        return instanceDagger;
     }
 
     @Override
@@ -43,6 +49,8 @@ public class App extends Application {
         }
         Fabric.with(this, new Crashlytics());
 
+       /* instanceDagger = buildDaggerInstance();*/
+
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient logger;
@@ -56,6 +64,7 @@ public class App extends Application {
                 .build();
         }
 
+
         Retrofit retrofit = new Retrofit.Builder()
                 .client(logger)
                 .baseUrl(Constants.BASE_URL)
@@ -64,6 +73,11 @@ public class App extends Application {
                 .build();
         api = retrofit.create(Api.class);
     }
+
+   /* protected InstanceDagger buildDaggerInstance() {
+        return instanceDagger = DaggerInstanceDagger.builder().build();
+    }*/
+
 
 
     public static Api getApi() {

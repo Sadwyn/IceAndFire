@@ -6,12 +6,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
 
 import java.util.ArrayList;
@@ -40,43 +38,52 @@ public class CharacterWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         WidgetHelper widgetHelper = new WidgetHelper();
-         charactersIds = widgetHelper.getCharactersIds(context);
-        if(charactersIds.size() != 0) {
-            listSize = charactersIds.size();
-            Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
-            Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
-            Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
-
-            Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
-            instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
-
-            instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId-1));
-
-            nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
-            prevRequest.putExtra(INCOMING_INTENT, PREV_HERO_SWITCH);
-            nextRequest.putExtra(INCOMING_INTENT, NEXT_HERO_SWITCH);
-
-            nameRequest.setAction(WIDGET_INFO_GOTH);
-            prevRequest.setAction(WIDGET_INFO_GOTH);
-            nextRequest.setAction(WIDGET_INFO_GOTH);
-
-            PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, 0);
-            PendingIntent prevPending = PendingIntent.getBroadcast(context, 101, prevRequest, 0);
-            PendingIntent nextPending = PendingIntent.getBroadcast(context, 102, nextRequest, 0);
-
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
-            views.setOnClickPendingIntent(R.id.characterName, namePending);
-            views.setOnClickPendingIntent(R.id.prevCharacter, prevPending);
-            views.setOnClickPendingIntent(R.id.nextCharacter, nextPending);
-
-            context.sendBroadcast(instantIdRequest);
-            appWidgetManager.updateAppWidget(appWidgetIds, views);
+        charactersIds = widgetHelper.getCharactersIds(context);
+        if (charactersIds.size() != 0) {
+            refreshWidgetWithInfo(context, appWidgetManager, appWidgetIds);
+        } else {
+            refreshWidgetWithoutInfo(context, appWidgetManager, appWidgetIds);
         }
-        else {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
-            views.setTextViewText(R.id.characterName, "No Heroes in database");
-            appWidgetManager.updateAppWidget(appWidgetIds, views);
-        }
+    }
+
+    public void refreshWidgetWithoutInfo(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
+        views.setTextViewText(R.id.characterName, "No Heroes in database");
+        Intent intent = new Intent(context, MainActivity.class);
+        views.setOnClickPendingIntent(R.id.characterName, PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        appWidgetManager.updateAppWidget(appWidgetIds, views);
+    }
+
+    public void refreshWidgetWithInfo(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        listSize = charactersIds.size();
+        Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
+        Intent prevRequest = new Intent(context, WidgetIntentReceiver.class);
+        Intent nextRequest = new Intent(context, WidgetIntentReceiver.class);
+
+        Intent instantIdRequest = new Intent(context, WidgetIntentReceiver.class);
+        instantIdRequest.putExtra(INCOMING_INTENT, INSTANT_ID_REQUEST);
+
+        instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
+
+        nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
+        prevRequest.putExtra(INCOMING_INTENT, PREV_HERO_SWITCH);
+        nextRequest.putExtra(INCOMING_INTENT, NEXT_HERO_SWITCH);
+
+        nameRequest.setAction(WIDGET_INFO_GOTH);
+        prevRequest.setAction(WIDGET_INFO_GOTH);
+        nextRequest.setAction(WIDGET_INFO_GOTH);
+
+        PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, 0);
+        PendingIntent prevPending = PendingIntent.getBroadcast(context, 101, prevRequest, 0);
+        PendingIntent nextPending = PendingIntent.getBroadcast(context, 102, nextRequest, 0);
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
+        views.setOnClickPendingIntent(R.id.characterName, namePending);
+        views.setOnClickPendingIntent(R.id.prevCharacter, prevPending);
+        views.setOnClickPendingIntent(R.id.nextCharacter, nextPending);
+
+        context.sendBroadcast(instantIdRequest);
+        appWidgetManager.updateAppWidget(appWidgetIds, views);
     }
 
     @Override
@@ -109,8 +116,6 @@ public class CharacterWidget extends AppWidgetProvider {
         ComponentName thisWidget = new ComponentName(context.getApplicationContext(), CharacterWidget.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-        if(intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) onUpdate(context, appWidgetManager,appWidgetIds);
-
         if (appWidgetIds != null && appWidgetIds.length > 0) {
             if (intent.hasExtra(PREV_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(PREV_HERO_ID, 1));
@@ -118,18 +123,20 @@ public class CharacterWidget extends AppWidgetProvider {
             } else if (intent.hasExtra(NEXT_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(NEXT_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(NEXT_HERO_NAME));
-            }
-            else if(intent.hasExtra(INSTANT_HERO_ID)){
+            } else if (intent.hasExtra(INSTANT_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID, 0));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(INSTANT_HERO_NAME));
             }
 
             PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.characterName, namePending);
-
             appWidgetManager.updateAppWidget(appWidgetIds, views);
+
+            if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE))
+                onUpdate(context, appWidgetManager, appWidgetIds);
         }
     }
+
     public static void updateWidget(Context context) {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         context.sendBroadcast(intent);

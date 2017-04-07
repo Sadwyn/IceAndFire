@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -26,6 +27,8 @@ import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 
 import org.parceler.Parcels;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,13 +57,14 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     TextView aliases;
 
     private Character character;
-    private DetailBackgroundPresenter backgroundPresenter;
+    @Inject
+    public DetailBackgroundPresenter backgroundPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        backgroundPresenter = new DetailBackgroundPresenter(this.getActivity().getApplicationContext(), this);
+        App.getInstanceDagger().inject(this);
         if (getArguments() != null) {
             character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
         }
