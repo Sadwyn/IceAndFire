@@ -7,8 +7,11 @@ import android.support.v7.preference.PreferenceManager;
 import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.data.CharactersTable;
+import com.sadwyn.iceandfire.network.Api;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,6 +20,8 @@ import io.reactivex.schedulers.Schedulers;
 public class CharacterModelImpl implements CharacterModel {
     private static CharacterModelImpl model;
 
+    @Inject
+    Api api;
 
     public static CharacterModelImpl getInstance() {
         if (model == null) model = new CharacterModelImpl();
@@ -24,6 +29,7 @@ public class CharacterModelImpl implements CharacterModel {
     }
 
     private CharacterModelImpl() {
+        App.getComponentDagger().inject(this);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class CharacterModelImpl implements CharacterModel {
     }
 
     public Observable<List<Character>> getObservable(int page, int size) {
-        return App.getApi().getData(page, size);
+        return api.getData(page, size);
     }
 
     @Override
