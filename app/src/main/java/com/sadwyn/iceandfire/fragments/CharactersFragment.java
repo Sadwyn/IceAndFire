@@ -51,7 +51,6 @@ public class CharactersFragment extends Fragment implements CharacterView {
 
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
-    @Inject
     public CharactersListPresenter presenter;
     private ContentFragmentCallback callback;
     private CharactersAdapter adapter;
@@ -67,7 +66,8 @@ public class CharactersFragment extends Fragment implements CharacterView {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         model = CharacterModelImpl.getInstance();
-        App.getInstanceDagger().inject(this);
+        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
+
     }
 
     @Nullable

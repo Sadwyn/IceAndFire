@@ -57,14 +57,13 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     TextView aliases;
 
     private Character character;
-    @Inject
     public DetailBackgroundPresenter backgroundPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        App.getInstanceDagger().inject(this);
+        backgroundPresenter =  new DetailBackgroundPresenter(getActivity().getApplicationContext(), this);
         if (getArguments() != null) {
             character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
         }

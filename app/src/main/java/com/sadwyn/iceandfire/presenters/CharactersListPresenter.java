@@ -3,22 +3,15 @@ package com.sadwyn.iceandfire.presenters;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.sadwyn.iceandfire.CharacterView;
-import com.sadwyn.iceandfire.ContextAnnotation;
-import com.sadwyn.iceandfire.InstanceDagger;
 import com.sadwyn.iceandfire.models.FailureRequestCallback;
 import com.sadwyn.iceandfire.models.Character;
-import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.models.ResultListCallback;
 
 import org.parceler.Parcels;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,11 +21,7 @@ import java.util.Set;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.schedulers.SingleScheduler;
 import io.reactivex.observers.DisposableObserver;
 
 @Module
