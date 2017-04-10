@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,16 +25,18 @@ import android.widget.TextView;
 
 import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.ComponentDagger;
+import com.sadwyn.iceandfire.DaggerComponentDagger;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
+import com.sadwyn.iceandfire.modules.PresenterModule;
 import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,28 +47,37 @@ import butterknife.ButterKnife;
 import static com.sadwyn.iceandfire.Constants.DATA_SOURCE_PREF;
 import static com.sadwyn.iceandfire.Constants.DEFAULT_SPAN_COUNT;
 
-
 public class CharactersFragment extends Fragment implements CharacterView {
 
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
+
+    @Inject
     public CharactersListPresenter presenter;
+
     private ContentFragmentCallback callback;
     private CharactersAdapter adapter;
     private RecyclerView.OnScrollListener supportListener;
     private CharacterModel model;
-
-    public CharactersListPresenter getPresenter() {
-        return presenter;
-    }
+    ComponentDagger componentDagger;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (componentDagger == null) {
+            componentDagger = DaggerComponentDagger.builder()
+                    .presenterModule(new PresenterModule(getContext(), this))
+                    .build();
+        }
+        componentDagger.inject(this);
         model = CharacterModelImpl.getInstance();
-        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
 
+    }
+
+
+    public CharactersListPresenter getPresenter() {
+        return presenter;
     }
 
     @Nullable

@@ -13,9 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public final class InstanceApi {
-
     private static boolean isLoggerEnabled = false;
-
     public InstanceApi() {}
 
     public static Api getApi() {

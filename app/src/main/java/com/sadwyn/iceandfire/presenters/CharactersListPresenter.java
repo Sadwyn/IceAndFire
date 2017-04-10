@@ -7,9 +7,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.sadwyn.iceandfire.CharacterView;
-import com.sadwyn.iceandfire.models.FailureRequestCallback;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
+import com.sadwyn.iceandfire.models.FailureRequestCallback;
 
 import org.parceler.Parcels;
 
@@ -19,12 +19,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import dagger.Module;
+import javax.inject.Inject;
+
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 
-@Module
 public class CharactersListPresenter extends BasePresenter implements FailureRequestCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
@@ -41,11 +41,6 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
     private CharacterView characterFragmentView;
     private CompositeDisposable disposables;
-
-    @Provides
-    public CharactersListPresenter provideCharacterPresenter(Context context, CharacterView characterFragmentView){
-        return new CharactersListPresenter(context, characterFragmentView);
-    }
 
 
     public CharactersListPresenter(Context context, CharacterView characterFragmentView) {
@@ -65,8 +60,8 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
     public void onViewCreated(View view, Bundle bundle) {
         if (getList().isEmpty()) {
             if (bundle == null)
-               disposables.add(characterModel.getCharactersList(page, size, view.getContext(), this).subscribeWith(getObserver()));
-             else
+                disposables.add(characterModel.getCharactersList(page, size, view.getContext(), this).subscribeWith(getObserver()));
+            else
                 restoreData(bundle);
         }
     }
@@ -86,7 +81,7 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -98,8 +93,8 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
     @Override
     public void onDestroyView() {
-        if(disposables != null && disposables.isDisposed())
-        disposables.clear();
+        if (disposables != null && disposables.isDisposed())
+            disposables.clear();
     }
 
     @Override
