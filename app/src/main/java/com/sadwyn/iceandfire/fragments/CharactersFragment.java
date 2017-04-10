@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -37,6 +38,8 @@ import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -48,10 +51,10 @@ public class CharactersFragment extends Fragment implements CharacterView {
 
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
-
+    @Inject
+    public CharactersListPresenter presenter;
     private ContentFragmentCallback callback;
     private CharactersAdapter adapter;
-    private CharactersListPresenter presenter;
     private RecyclerView.OnScrollListener supportListener;
     private CharacterModel model;
 
@@ -64,7 +67,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         model = CharacterModelImpl.getInstance();
-        presenter = new CharactersListPresenter(getActivity().getApplicationContext(), this);
+        App.getInstanceDagger().inject(this);
     }
 
     @Nullable

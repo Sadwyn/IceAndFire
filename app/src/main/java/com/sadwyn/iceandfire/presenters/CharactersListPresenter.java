@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.ContextAnnotation;
+import com.sadwyn.iceandfire.InstanceDagger;
 import com.sadwyn.iceandfire.models.FailureRequestCallback;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
@@ -24,6 +26,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import dagger.Module;
+import dagger.Provides;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
@@ -31,6 +35,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.internal.schedulers.SingleScheduler;
 import io.reactivex.observers.DisposableObserver;
 
+@Module
 public class CharactersListPresenter extends BasePresenter implements FailureRequestCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
@@ -47,6 +52,11 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
     private CharacterView characterFragmentView;
     private CompositeDisposable disposables;
+
+    @Provides
+    public CharactersListPresenter provideCharacterPresenter(Context context, CharacterView characterFragmentView){
+        return new CharactersListPresenter(context, characterFragmentView);
+    }
 
 
     public CharactersListPresenter(Context context, CharacterView characterFragmentView) {

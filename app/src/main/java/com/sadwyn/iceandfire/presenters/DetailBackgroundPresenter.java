@@ -10,14 +10,25 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.ContextAnnotation;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.models.DetailBackgroundModelImpl;
 
+import dagger.Module;
+import dagger.Provides;
+
+@Module
 public class DetailBackgroundPresenter extends BasePresenter {
     private DetailBackgroundView detailBackgroundView;
     private Context detailFragmentContext;
     private DetailBackgroundModelImpl backgroundModel;
+
+    @Provides
+    public DetailBackgroundPresenter  provideCharacterPresenter(Context context, DetailBackgroundView detailBackgroundView){
+        return new DetailBackgroundPresenter (context, detailBackgroundView);
+    }
 
     public DetailBackgroundPresenter(Context context, DetailBackgroundView view) {
         this.detailBackgroundView = view;
