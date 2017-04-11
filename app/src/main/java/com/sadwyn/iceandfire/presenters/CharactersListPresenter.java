@@ -3,6 +3,7 @@ package com.sadwyn.iceandfire.presenters;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -55,7 +56,6 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
         return list;
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle bundle) {
         if (getList().isEmpty()) {
@@ -77,13 +77,13 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
                 list.addAll(set);
                 set.clear();
                 characterFragmentView.showCharactersList(false);
+                characterModel.saveListCharactersToDB(list,context);
             }
 
             @Override
             public void onError(Throwable e) {
 
             }
-
             @Override
             public void onComplete() {
 
@@ -114,7 +114,6 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
         set = new LinkedHashSet<>();
 
     }
-
 
     public void addNewData() {
         page++;

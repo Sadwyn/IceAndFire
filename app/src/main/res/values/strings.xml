@@ -20,7 +20,9 @@
     <string name="data_sources_key" translatable="false">data_sources</string>
     <string name="exportDataButtonTitle">Export From Database</string>
     <string name="exportButtonKey" translatable="false">exportButtonKey</string>
-    <string name="search">Search</string>
-
+    <string name="search" translatable="false">Search</string>
+    <string name="permanentSaveCheckBoxTitle">Permanent Save</string>
+    <string name="permanentSaveCheckbox" translatable="false">permanentSaveCheckbox</string>
+    <string name="permanentSaveCheckboxDescription">Chose this option to enable "SOR" technology (Save on Response). When it enable your data will be saved in DB immediately as response achieve</string>
 
 </resources>

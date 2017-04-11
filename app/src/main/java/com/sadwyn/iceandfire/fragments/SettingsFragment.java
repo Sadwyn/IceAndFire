@@ -8,10 +8,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.util.Log;
 
 import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.services.ExportDataService;
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.sadwyn.iceandfire.Constants.DATA_SOURCE_PREF;
+import static com.sadwyn.iceandfire.Constants.IS_PERMANENT_SAVE_CHECKED;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 
@@ -55,9 +58,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setExportButtonPreference();
+        setPermanentSaveCheckboxPreference();
+    }
+
+    public void setPermanentSaveCheckboxPreference() {
+        Preference permanentSaveCheckbox = getPreferenceManager().findPreference(getString(R.string.permanentSaveCheckbox));
+        permanentSaveCheckbox.setOnPreferenceChangeListener((preference, newValue) -> {
+            if((boolean)newValue)
+                saveOneBooleanToPref(IS_PERMANENT_SAVE_CHECKED, true);
+            else saveOneBooleanToPref(IS_PERMANENT_SAVE_CHECKED, false);
+            return true;
+        });
+    }
+
+    public void setExportButtonPreference() {
         addPreferencesFromResource(R.xml.preferences);
-        Preference preference1 = getPreferenceManager().findPreference(getString(R.string.exportButtonKey));
-        preference1.setOnPreferenceClickListener(preference13 -> {
+        Preference exportButton = getPreferenceManager().findPreference(getString(R.string.exportButtonKey));
+        exportButton.setOnPreferenceClickListener(preference13 -> {
             Context context = getActivity().getApplicationContext();
 
             intent = new Intent(context, ExportDataService.class);
@@ -66,7 +84,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
             intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(characterList));
 
             if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED)
             context.startService(intent);
             else {
@@ -82,12 +100,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
 
     }
 
-    public void saveOneStringToPref(String key, String lang)
+    public void saveOneStringToPref(String key, String str)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key, lang);
+        editor.putString(key, str);
         editor.apply();
+    }
+
+    public void saveOneBooleanToPref(String key, boolean bool)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, bool);
+        editor.apply();
+        Log.i("TAG", String.valueOf( bool));
     }
 
     public static SettingsFragment newInstance(){
@@ -96,7 +123,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
 
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
-
         if(preference.getKey().equals(getString(R.string.languages_list_key))) {
             ListPreference languagePreferences = (ListPreference) preference;
             if(languagePreferences.getValue() == null)
@@ -127,4 +153,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         }
         return false;
     }
+
 }

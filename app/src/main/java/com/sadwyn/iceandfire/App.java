@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.sadwyn.iceandfire.activities.MainActivity;
+import com.sadwyn.iceandfire.data.DatabaseManager;
+import com.sadwyn.iceandfire.data.HeroesDbHelper;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.modules.ApiModule;
@@ -32,6 +34,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         componentDagger = DaggerComponentDagger.builder()
                 .apiModule(new ApiModule())
                 .presenterModule(new PresenterModule(getApplicationContext(), CharactersFragment.newInstance() ))
@@ -46,6 +49,7 @@ public class App extends Application {
                 refWatcher.watch(this);
             }
         }
+        DatabaseManager.initializeInstance(new HeroesDbHelper(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
     }
 }

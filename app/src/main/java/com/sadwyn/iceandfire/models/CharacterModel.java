@@ -19,4 +19,6 @@ public interface CharacterModel {
 
     void deleteCharacterBySwipe(Context context, String name);
 
+    void saveListCharactersToDB(List<Character> list, Context context);
+
 }

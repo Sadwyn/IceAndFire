@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         android:title="@string/language_title"
         android:entries="@array/languages"
@@ -14,4 +15,9 @@
     <Preference
         android:title="@string/exportDataButtonTitle"
         android:key="@string/exportButtonKey" />
+
+    <CheckBoxPreference
+        android:title="@string/permanentSaveCheckBoxTitle"
+        android:key="@string/permanentSaveCheckbox"
+        app:summary="@string/permanentSaveCheckboxDescription"/>
 </PreferenceScreen>
