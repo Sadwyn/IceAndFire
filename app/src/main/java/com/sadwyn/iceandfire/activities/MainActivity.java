@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case REQUEST_FOR_WRITE_TO_CSV: {
+            case REQUEST_FOR_WRITE_TO_CSV : {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ((SettingsFragment) getSupportFragmentManager()
                             .findFragmentByTag(SETTINGS_FRAGMENT_TAG)).exportDataAfterRequest();

@@ -24,10 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sadwyn.iceandfire.CharacterView;
-import com.sadwyn.iceandfire.ComponentDagger;
-import com.sadwyn.iceandfire.DaggerComponentDagger;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
+import com.sadwyn.iceandfire.components.CharactersPresenterComponent;
+import com.sadwyn.iceandfire.components.DaggerCharactersPresenterComponent;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
@@ -58,17 +58,17 @@ public class CharactersFragment extends Fragment implements CharacterView {
     private CharactersAdapter adapter;
     private RecyclerView.OnScrollListener supportListener;
     private CharacterModel model;
-    ComponentDagger componentDagger;
+    CharactersPresenterComponent presenterComponent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (componentDagger == null) {
-            componentDagger = DaggerComponentDagger.builder()
+        if (presenterComponent == null) {
+            presenterComponent = DaggerCharactersPresenterComponent.builder()
                     .charactersPresenterModule(new CharactersPresenterModule(getContext(), this)).build();
         }
-        componentDagger.inject(this);
+        presenterComponent.inject(this);
         model = CharacterModelImpl.getInstance();
 
     }

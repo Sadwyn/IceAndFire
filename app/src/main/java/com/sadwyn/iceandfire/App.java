@@ -3,14 +3,12 @@ package com.sadwyn.iceandfire;
 import android.app.Application;
 import android.content.Context;
 
+import com.sadwyn.iceandfire.components.ComponentDagger;
 import com.sadwyn.iceandfire.data.DatabaseManager;
 import com.sadwyn.iceandfire.data.HeroesDbHelper;
-import com.sadwyn.iceandfire.fragments.CharactersFragment;
-import com.sadwyn.iceandfire.modules.ApiModule;
-import com.sadwyn.iceandfire.modules.CharactersPresenterModule;
-import com.sadwyn.iceandfire.modules.SettingsPresenterModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.sadwyn.iceandfire.components.DaggerComponentDagger;
 
 
 public class App extends Application {
@@ -30,11 +28,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        componentDagger = DaggerComponentDagger.builder()
-                .apiModule(new ApiModule())
-                .charactersPresenterModule(new CharactersPresenterModule(getApplicationContext(), CharactersFragment.newInstance()))
-                .build();
+        componentDagger = DaggerComponentDagger.builder().build();
 
         if (getResources().getBoolean(R.bool.isDebug)) {
             if (LeakCanary.isInAnalyzerProcess(this)) {

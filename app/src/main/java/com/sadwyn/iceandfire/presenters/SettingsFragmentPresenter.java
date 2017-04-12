@@ -17,6 +17,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -25,14 +26,11 @@ import io.reactivex.schedulers.Schedulers;
 public class SettingsFragmentPresenter extends BasePresenter {
     private Intent intent;
 
-    public Intent getIntent() {
-        return intent;
-    }
-
     public void onExportButtonClick(Context context){
         intent = new Intent(context, ExportDataService.class);
-        CharacterModelImpl model = CharacterModelImpl.getInstance();
-        Observable.just(model.getCharactersList(context)).subscribeOn(Schedulers.io()).subscribe(new Observer<List<Character>>() {
+        ExportDataNotification notification = new ExportDataNotification(context);
+        notification.showNotification();
+       Observer<List<Character>> observer =  new Observer<List<Character>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -42,8 +40,6 @@ public class SettingsFragmentPresenter extends BasePresenter {
             public void onNext(List<Character> value) {
                 intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(value));
                 context.startService(intent);
-                ExportDataNotification notification = new ExportDataNotification(context);
-                notification.showNotification();
             }
 
             @Override
@@ -55,7 +51,10 @@ public class SettingsFragmentPresenter extends BasePresenter {
             public void onComplete() {
 
             }
-        });
+        };
+        CharacterModelImpl model = CharacterModelImpl.getInstance();
+         Observable.defer(() -> model.getObservableCharactersList(context)).subscribeOn(Schedulers.io()).subscribe(observer);
+
     }
 
     @Override
