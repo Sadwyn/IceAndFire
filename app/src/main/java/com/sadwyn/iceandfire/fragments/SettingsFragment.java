@@ -1,11 +1,14 @@
 package com.sadwyn.iceandfire.fragments;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.CheckBoxPreference;
@@ -21,8 +24,10 @@ import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
+import com.sadwyn.iceandfire.services.ExportDataToService;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
+import com.sadwyn.iceandfire.views.notifications.ExportDataNotification;
 
 import org.parceler.Parcels;
 
@@ -58,6 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
         setExportButtonPreference();
         setPermanentSaveCheckboxPreference();
     }
@@ -73,25 +79,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
     }
 
     public void setExportButtonPreference() {
-        addPreferencesFromResource(R.xml.preferences);
         Preference exportButton = getPreferenceManager().findPreference(getString(R.string.exportButtonKey));
-        exportButton.setOnPreferenceClickListener(preference13 -> {
-            Context context = getActivity().getApplicationContext();
-
-            intent = new Intent(context, ExportDataService.class);
-            CharacterModelImpl model = CharacterModelImpl.getInstance();
-            List<Character> characterList = model.getCharactersList(context);
-            intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(characterList));
-
-            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED)
-            context.startService(intent);
-            else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_FOR_WRITE_TO_CSV);
+        exportButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference13) {
+                Context context = getContext();
+                Activity activity = getActivity();
+                intent = new Intent(context, ExportDataService.class);
+                Thread exportThread = new Thread(new ExportDataToService(context, activity, intent));
+                exportThread.start();
+                ExportDataNotification notification = new ExportDataNotification(context);
+                notification.showNotification();
+                return false;
             }
-            return false;
         });
     }
 

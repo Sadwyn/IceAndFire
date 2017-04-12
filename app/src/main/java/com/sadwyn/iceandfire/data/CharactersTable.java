@@ -22,18 +22,10 @@ import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.CO
 import static com.sadwyn.iceandfire.data.HeroesDataContract.MainDataStructure.COLUMN_NAME;
 
 public class CharactersTable {
-    private Context context;
-    private HeroesDbHelper dbHelper;
 
-    public CharactersTable(Context context) {
-        this.context = context;
-        this.dbHelper = new HeroesDbHelper(context);
-    }
 
     private int saveCharacterToDb(Character character) {
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
-        makeTransaction(character, database);
-        DatabaseManager.getInstance().closeDatabase();
+        makeTransaction(character);
         return 0;
     }
 
@@ -41,11 +33,11 @@ public class CharactersTable {
         return Observable.defer(() -> Observable.just(saveCharacterToDb(character)));
     }
 
-    public Observable<Integer> getInsertListObservable(List<Character> list) {
+    public synchronized Observable<Integer> getInsertListObservable(List<Character> list) {
         return Observable.defer(() -> Observable.just(saveCharactersListToDb(list)));
     }
 
-    public void makeTransaction(Character value, SQLiteDatabase writableDatabase) {
+    public void makeTransaction(Character value) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, value.getName());
         values.put(COLUMN_BORN, value.getBorn());
@@ -55,14 +47,16 @@ public class CharactersTable {
         values.put(COLUMN_MOTHER, value.getMother());
         values.put(COLUMN_DEAD, value.getDied());
 
-        writableDatabase.insert(HeroesDataContract.MainDataStructure.TABLE_NAME, null, values);
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
+        database.insert(HeroesDataContract.MainDataStructure.TABLE_NAME, null, values);
 
         ContentValues aliases = new ContentValues();
         for (String alias : value.getAliases()) {
             aliases.put(HeroesDataContract.AliasesStructure.COLUMN_NICKNAME, alias);
             aliases.put(HeroesDataContract.AliasesStructure.OUTER_KEY, value.getName());
-            writableDatabase.insert(HeroesDataContract.AliasesStructure.TABLE_NAME, null, aliases);
+            database.insert(HeroesDataContract.AliasesStructure.TABLE_NAME, null, aliases);
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     public int saveCharactersListToDb(List<Character> list) {
@@ -71,8 +65,9 @@ public class CharactersTable {
         Iterator<Character> characterIterator = list.iterator();
 
         while (characterIterator.hasNext()) {
-            if (!isHeroAlreadySaved(characterIterator.next(), database)) {
-                makeTransaction(characterIterator.next(), database);
+            Character character = characterIterator.next();
+            if (!isHeroAlreadySaved(character)) {
+                makeTransaction(character);
             }
         }
 
@@ -83,28 +78,30 @@ public class CharactersTable {
     }
 
     public boolean deleteCharacterByName(String name) {
-        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+        SQLiteDatabase writableDatabase = DatabaseManager.getInstance().openDatabase();
         writableDatabase.delete("heroes", "name" + "='" + name + "'", null);
         writableDatabase.delete("aliases", "outer" + "='" + name + "'", null);
-        writableDatabase.close();
+        DatabaseManager.getInstance().closeDatabase();
         return true;
     }
 
-    public boolean isHeroAlreadySaved(Character character, SQLiteDatabase database) {
+    public boolean isHeroAlreadySaved(Character character) {
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         String name = "";
-        String selectQuery = "SELECT * FROM heroes WHERE name = '" + character.getName() + "'";
-        Cursor c = database.rawQuery(selectQuery, null);
+        String selectQuery = "SELECT * FROM heroes WHERE name = ?";
+        Cursor c = database.rawQuery(selectQuery, new String[]{character.getName()});
         if (c.moveToFirst())
             name = c.getString(c.getColumnIndex("name"));
         c.close();
+        DatabaseManager.getInstance().closeDatabase();
         return character.getName().equals(name);
     }
 
     public List<Character> getCharactersFromDB() {
         List<Character> listResult = new ArrayList<>();
-        SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
 
-        Cursor cursor = readableDatabase.query(
+        Cursor cursor = database.query(
                 HeroesDataContract.MainDataStructure.TABLE_NAME,
                 HeroesDataContract.MainDataStructure.DEFAULT_PROJECTION,
                 null,
@@ -134,8 +131,8 @@ public class CharactersTable {
                 String dead = cursor.getString(deadColumnIndex);
 
                 ArrayList<String> aliases = new ArrayList<>();
-                String selectQuery = "SELECT * FROM aliases WHERE outer = '" + name + "'";
-                Cursor c = readableDatabase.rawQuery(selectQuery, null);
+                String selectQuery = "SELECT * FROM aliases WHERE outer = ?";
+                Cursor c = database.rawQuery(selectQuery, new String[]{name});
                 while (c.moveToNext())
                     aliases.add(c.getString(c.getColumnIndex("nickname")));
                 c.close();
@@ -155,7 +152,7 @@ public class CharactersTable {
             }
         } finally {
             cursor.close();
-            readableDatabase.close();
+            DatabaseManager.getInstance().closeDatabase();
         }
 
         return listResult;

@@ -59,7 +59,7 @@ public class CharacterModelImpl implements CharacterModel {
 
     @Override
     public void saveCharacterToDB(Character character, Context context) {
-            CharactersTable table = new CharactersTable(context);
+            CharactersTable table = new CharactersTable();
             Observable<Integer> oneHeroObservable = table.getInsertObservable(character);
             oneHeroObservable
                     .subscribeOn(Schedulers.io())
@@ -68,19 +68,19 @@ public class CharacterModelImpl implements CharacterModel {
 
     @Override
     public Observable<List<Character>> getObservableCharactersList(Context context) {
-        CharactersTable charactersTable = new CharactersTable(context);
+        CharactersTable charactersTable = new CharactersTable();
         return Observable.just(charactersTable.getCharactersFromDB());
     }
 
     @Override
     public List<Character> getCharactersList(Context context) {
-        CharactersTable charactersTable = new CharactersTable(context);
+        CharactersTable charactersTable = new CharactersTable();
         return charactersTable.getCharactersFromDB();
     }
 
     @Override
     public void deleteCharacterBySwipe(Context context, String name) {
-        CharactersTable charactersTable = new CharactersTable(context);
+        CharactersTable charactersTable = new CharactersTable();
         charactersTable.deleteCharacterByName(name);
     }
 
@@ -88,7 +88,7 @@ public class CharacterModelImpl implements CharacterModel {
     public void saveListCharactersToDB(List<Character> list, Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         if(sp.getBoolean(Constants.IS_PERMANENT_SAVE_CHECKED, false)) {
-            CharactersTable table = new CharactersTable(context);
+            CharactersTable table = new CharactersTable();
             Observable<Integer> listObservable = table.getInsertListObservable(list);
             listObservable
                     .subscribeOn(Schedulers.io())

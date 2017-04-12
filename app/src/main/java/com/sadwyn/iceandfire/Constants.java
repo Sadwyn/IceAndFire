@@ -36,4 +36,5 @@ public interface Constants {
     String LANG_PREF = "LANG_PREF";
     String DATA_SOURCE_PREF = "DATA_SOURCE_PREF";
     String IS_PERMANENT_SAVE_CHECKED = "IS_PERMANENT_SAVE_CHECKED";
+    int CSV_EXPORT_NOTIFICATION_ID = 240;
 }

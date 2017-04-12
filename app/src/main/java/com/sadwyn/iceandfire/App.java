@@ -50,6 +50,6 @@ public class App extends Application {
             }
         }
         DatabaseManager.initializeInstance(new HeroesDbHelper(getApplicationContext()));
-        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
     }
 }

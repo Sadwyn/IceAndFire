@@ -11,6 +11,7 @@ import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.models.FailureRequestCallback;
+import com.sadwyn.iceandfire.utils.ParcelableCopyOnWriteArrayList;
 
 import org.parceler.Parcels;
 
@@ -19,6 +20,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.inject.Inject;
 
@@ -110,7 +112,7 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
 
     public void initializeData() {
         page = 1;
-        list = new ArrayList<>();
+        list = new ParcelableCopyOnWriteArrayList();
         set = new LinkedHashSet<>();
 
     }
