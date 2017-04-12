@@ -16,6 +16,8 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
@@ -35,6 +37,9 @@ import org.parceler.Parcels;
 
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
@@ -47,11 +52,16 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     Drawer.Result drawer;
     boolean doubleBackToExitPressedOnce = false;
+    @BindView(R.id.adView)
+    AdView adView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+
         restoreSavedLocale();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -63,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
         setSelectedItemInDrawer(fragment);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void setSelectedItemInDrawer(Fragment fragment) {

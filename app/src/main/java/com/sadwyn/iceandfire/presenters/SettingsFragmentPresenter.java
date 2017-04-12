@@ -17,7 +17,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -53,8 +52,7 @@ public class SettingsFragmentPresenter extends BasePresenter {
             }
         };
         CharacterModelImpl model = CharacterModelImpl.getInstance();
-         Observable.defer(() -> model.getObservableCharactersList(context)).subscribeOn(Schedulers.io()).subscribe(observer);
-
+         Observable.defer(() -> model.getObservableCharactersList(context)).subscribeOn(Schedulers.io()).subscribe( observer);
     }
 
     @Override
