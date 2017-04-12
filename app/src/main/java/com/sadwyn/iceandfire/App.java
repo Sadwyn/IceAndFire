@@ -3,18 +3,14 @@ package com.sadwyn.iceandfire;
 import android.app.Application;
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
-import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.data.DatabaseManager;
 import com.sadwyn.iceandfire.data.HeroesDbHelper;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
-import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.modules.ApiModule;
-import com.sadwyn.iceandfire.modules.PresenterModule;
+import com.sadwyn.iceandfire.modules.CharactersPresenterModule;
+import com.sadwyn.iceandfire.modules.SettingsPresenterModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-
-import io.fabric.sdk.android.Fabric;
 
 
 public class App extends Application {
@@ -37,7 +33,7 @@ public class App extends Application {
 
         componentDagger = DaggerComponentDagger.builder()
                 .apiModule(new ApiModule())
-                .presenterModule(new PresenterModule(getApplicationContext(), CharactersFragment.newInstance() ))
+                .charactersPresenterModule(new CharactersPresenterModule(getApplicationContext(), CharactersFragment.newInstance()))
                 .build();
 
         if (getResources().getBoolean(R.bool.isDebug)) {

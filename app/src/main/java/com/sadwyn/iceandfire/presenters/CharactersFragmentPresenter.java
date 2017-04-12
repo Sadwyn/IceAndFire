@@ -28,7 +28,7 @@ import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 
-public class CharactersListPresenter extends BasePresenter implements FailureRequestCallback {
+public class CharactersFragmentPresenter extends BasePresenter implements FailureRequestCallback {
 
     public static final String PAGE_KEY = "PAGE_KEY";
     public static final String LIST_KEY = "LIST_KEY";
@@ -46,7 +46,7 @@ public class CharactersListPresenter extends BasePresenter implements FailureReq
     private CompositeDisposable disposables;
 
 
-    public CharactersListPresenter(Context context, CharacterView characterFragmentView) {
+    public CharactersFragmentPresenter(Context context, CharacterView characterFragmentView) {
         initializeData();
         this.context = context;
         this.characterFragmentView = characterFragmentView;

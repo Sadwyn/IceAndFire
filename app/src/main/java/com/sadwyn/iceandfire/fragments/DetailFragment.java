@@ -1,34 +1,26 @@
 package com.sadwyn.iceandfire.fragments;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.presenters.DetailBackgroundPresenter;
+import com.sadwyn.iceandfire.presenters.DetailFragmentPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 
 import org.parceler.Parcels;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,13 +49,13 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     TextView aliases;
 
     private Character character;
-    public DetailBackgroundPresenter backgroundPresenter;
+    public DetailFragmentPresenter backgroundPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        backgroundPresenter =  new DetailBackgroundPresenter(getActivity().getApplicationContext(), this);
+        backgroundPresenter =  new DetailFragmentPresenter(getActivity().getApplicationContext(), this);
         if (getArguments() != null) {
             character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
         }

@@ -17,14 +17,14 @@ import com.sadwyn.iceandfire.models.DetailBackgroundModelImpl;
 import dagger.Module;
 import dagger.Provides;
 
-public class DetailBackgroundPresenter extends BasePresenter {
+public class DetailFragmentPresenter extends BasePresenter {
     private DetailBackgroundView detailBackgroundView;
     private Context detailFragmentContext;
     private DetailBackgroundModelImpl backgroundModel;
 
 
 
-    public DetailBackgroundPresenter(Context context, DetailBackgroundView view) {
+    public DetailFragmentPresenter(Context context, DetailBackgroundView view) {
         this.detailBackgroundView = view;
         this.detailFragmentContext = context;
         this.backgroundModel = new DetailBackgroundModelImpl(context);

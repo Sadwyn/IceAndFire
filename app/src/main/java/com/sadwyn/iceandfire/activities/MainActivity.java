@@ -28,6 +28,7 @@ import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
+import com.sadwyn.iceandfire.views.notifications.ExportDataNotification;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
 import org.parceler.Parcels;
@@ -169,9 +170,9 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
         switch (requestCode) {
             case REQUEST_FOR_WRITE_TO_CSV: {
-                Intent intent = ((SettingsFragment) getSupportFragmentManager().findFragmentByTag(SETTINGS_FRAGMENT_TAG)).getIntent();
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startService(intent);
+                    ((SettingsFragment) getSupportFragmentManager()
+                            .findFragmentByTag(SETTINGS_FRAGMENT_TAG)).exportDataAfterRequest();
                 } else Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
             }
         }

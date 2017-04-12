@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.ComponentDagger;
 import com.sadwyn.iceandfire.DaggerComponentDagger;
@@ -32,8 +31,8 @@ import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModel;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.modules.PresenterModule;
-import com.sadwyn.iceandfire.presenters.CharactersListPresenter;
+import com.sadwyn.iceandfire.modules.CharactersPresenterModule;
+import com.sadwyn.iceandfire.presenters.CharactersFragmentPresenter;
 import com.sadwyn.iceandfire.views.adapters.CharactersAdapter;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
 
@@ -53,7 +52,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     RecyclerView recyclerView;
 
     @Inject
-    public CharactersListPresenter presenter;
+    public CharactersFragmentPresenter presenter;
 
     private ContentFragmentCallback callback;
     private CharactersAdapter adapter;
@@ -67,8 +66,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
         setHasOptionsMenu(true);
         if (componentDagger == null) {
             componentDagger = DaggerComponentDagger.builder()
-                    .presenterModule(new PresenterModule(getContext(), this))
-                    .build();
+                    .charactersPresenterModule(new CharactersPresenterModule(getContext(), this)).build();
         }
         componentDagger.inject(this);
         model = CharacterModelImpl.getInstance();
@@ -76,7 +74,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     }
 
 
-    public CharactersListPresenter getPresenter() {
+    public CharactersFragmentPresenter getPresenter() {
         return presenter;
     }
 
