@@ -2,7 +2,7 @@ package com.sadwyn.iceandfire.modules;
 
 import android.content.Context;
 
-import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.CharactersView;
 import com.sadwyn.iceandfire.presenters.CharactersFragmentPresenter;
 
 import dagger.Module;
@@ -13,15 +13,15 @@ import dagger.Provides;
 public class CharactersPresenterModule {
 
     private Context context;
-    private CharacterView characterView;
+    private CharactersView charactersView;
 
-    public CharactersPresenterModule(Context context, CharacterView view) {
+    public CharactersPresenterModule(Context context, CharactersView view) {
         this.context = context;
-        this.characterView = view;
+        this.charactersView = view;
     }
 
     @Provides
     CharactersFragmentPresenter providePresenter(){
-        return new CharactersFragmentPresenter(context, characterView);
+        return new CharactersFragmentPresenter(context, charactersView);
     }
 }

@@ -5,30 +5,23 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.CharactersView;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
-import com.sadwyn.iceandfire.models.FailureRequestCallback;
 import com.sadwyn.iceandfire.utils.ParcelableCopyOnWriteArrayList;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.inject.Inject;
-
-import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 
-public class CharactersFragmentPresenter extends BasePresenter implements FailureRequestCallback {
+public class CharactersFragmentPresenter extends BasePresenter  {
 
     public static final String PAGE_KEY = "PAGE_KEY";
     public static final String LIST_KEY = "LIST_KEY";
@@ -42,11 +35,11 @@ public class CharactersFragmentPresenter extends BasePresenter implements Failur
     private Context context;
     private CharacterModelImpl characterModel;
 
-    private CharacterView characterFragmentView;
+    private CharactersView characterFragmentView;
     private CompositeDisposable disposables;
 
 
-    public CharactersFragmentPresenter(Context context, CharacterView characterFragmentView) {
+    public CharactersFragmentPresenter(Context context, CharactersView characterFragmentView) {
         initializeData();
         this.context = context;
         this.characterFragmentView = characterFragmentView;
@@ -62,7 +55,7 @@ public class CharactersFragmentPresenter extends BasePresenter implements Failur
     public void onViewCreated(View view, Bundle bundle) {
         if (getList().isEmpty()) {
             if (bundle == null)
-                disposables.add(characterModel.getCharactersList(page, size, view.getContext(), this).subscribeWith(getObserver()));
+                disposables.add(characterModel.getCharactersList(page, size, view.getContext()).subscribeWith(getObserver()));
             else
                 restoreData(bundle);
         }
@@ -84,11 +77,11 @@ public class CharactersFragmentPresenter extends BasePresenter implements Failur
 
             @Override
             public void onError(Throwable e) {
-
+                characterFragmentView.showCharactersList(true);
             }
             @Override
             public void onComplete() {
-
+                Log.i("TAG", "ON_COMPLETE");
             }
         };
     }
@@ -119,12 +112,7 @@ public class CharactersFragmentPresenter extends BasePresenter implements Failur
 
     public void addNewData() {
         page++;
-        disposables.add(characterModel.getCharactersList(page, size, context, this).subscribeWith(getObserver()));
+        disposables.add(characterModel.getCharactersList(page, size, context).subscribeWith(getObserver()));
     }
 
-
-    @Override
-    public void onFailureRequest() {
-        characterFragmentView.showCharactersList(true);
-    }
 }

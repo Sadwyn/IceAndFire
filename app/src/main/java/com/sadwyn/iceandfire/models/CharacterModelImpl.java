@@ -44,8 +44,7 @@ public class CharacterModelImpl implements CharacterModel {
     }
 
     @Override
-    public Observable<List<Character>> getCharactersList(int page, int size, Context context,
-                                                         FailureRequestCallback failureRequestCallback) {
+    public Observable<List<Character>> getCharactersList(int page, int size, Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
         if (dataSource.equals("remote"))
@@ -72,11 +71,6 @@ public class CharacterModelImpl implements CharacterModel {
         return Observable.just(charactersTable.getCharactersFromDB());
     }
 
-    @Override
-    public List<Character> getCharactersList(Context context) {
-        CharactersTable charactersTable = new CharactersTable();
-        return charactersTable.getCharactersFromDB();
-    }
 
     @Override
     public void deleteCharacterBySwipe(Context context, String name) {

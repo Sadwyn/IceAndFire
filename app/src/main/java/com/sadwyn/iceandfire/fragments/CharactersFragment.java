@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.sadwyn.iceandfire.CharacterView;
+import com.sadwyn.iceandfire.CharactersView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.components.CharactersPresenterComponent;
@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
 import static com.sadwyn.iceandfire.Constants.DATA_SOURCE_PREF;
 import static com.sadwyn.iceandfire.Constants.DEFAULT_SPAN_COUNT;
 
-public class CharactersFragment extends Fragment implements CharacterView {
+public class CharactersFragment extends Fragment implements CharactersView {
 
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
