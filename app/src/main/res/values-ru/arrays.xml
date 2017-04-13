@@ -9,4 +9,14 @@
         <item>ru</item>
     </string-array>
 
+    <string-array name="data_sources">
+        <item>@string/local_data_source_title</item>
+        <item>@string/remote_data_source_title</item>
+    </string-array>
+
+    <string-array name="data_sources_values">
+        <item>local</item>
+        <item>remote</item>
+    </string-array>
+
 </resources>

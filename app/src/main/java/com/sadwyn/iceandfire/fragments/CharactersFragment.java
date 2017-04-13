@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.sadwyn.iceandfire.CharacterView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -51,6 +53,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
 
+
     @Inject
     public CharactersFragmentPresenter presenter;
 
@@ -63,6 +66,7 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
         if (presenterComponent == null) {
             presenterComponent = DaggerCharactersPresenterComponent.builder()
@@ -73,7 +77,6 @@ public class CharactersFragment extends Fragment implements CharacterView {
 
     }
 
-
     public CharactersFragmentPresenter getPresenter() {
         return presenter;
     }
@@ -81,7 +84,13 @@ public class CharactersFragment extends Fragment implements CharacterView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.characters_fragment, container, false);
+        View view = inflater.inflate(R.layout.characters_fragment, container, false);
+        if(getResources().getBoolean(R.bool.isDemoVersion)){
+            AdView adView = (AdView)view.findViewById(R.id.adv_id);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
+        return view;
     }
 
     @Override
@@ -118,7 +127,6 @@ public class CharactersFragment extends Fragment implements CharacterView {
         ButterKnife.bind(this, view);
         adapter = new CharactersAdapter(presenter.getList(), callback);
         presenter.onViewCreated(view, savedInstanceState);
-
 
          if(isRemoteStorage()) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

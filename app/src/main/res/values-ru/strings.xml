@@ -18,4 +18,5 @@
     <string name="exportDataButtonTitle">Экспорт из базы данных</string>
     <string name="drawer_item_characters">Персонажи</string>
     <string name="permanentSaveCheckBoxTitle">Постоянное сохранение</string>
+    <string name="permanentSaveCheckboxDescription">Выберите эту опцию чтобы сохранять данные локально в момент загрузки с сервера</string>
 </resources>

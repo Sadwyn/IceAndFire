@@ -52,15 +52,12 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     Drawer.Result drawer;
     boolean doubleBackToExitPressedOnce = false;
-    @BindView(R.id.adView)
-    AdView adView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
 
         restoreSavedLocale();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -73,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
         setSelectedItemInDrawer(fragment);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
     }
 
     private void setSelectedItemInDrawer(Fragment fragment) {
