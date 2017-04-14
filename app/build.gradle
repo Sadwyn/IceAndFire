@@ -110,7 +110,9 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$rxVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
-
+    compile "com.arello-mobile:moxy-android:$moxyVersion"
+    compile "com.arello-mobile:moxy:$moxyVersion"
+    provided "com.arello-mobile:moxy-compiler:$moxyVersion"
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar')
             {
