@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.widget.RemoteViews;
 
 import com.sadwyn.iceandfire.R;
@@ -13,6 +14,7 @@ import com.sadwyn.iceandfire.activities.MainActivity;
 import com.sadwyn.iceandfire.receivers.WidgetIntentReceiver;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.sadwyn.iceandfire.Constants.CURRENT_HERO_ID;
 import static com.sadwyn.iceandfire.Constants.HERO_DETAIL_REQUESTED;
@@ -106,6 +108,9 @@ public class CharacterWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
+        Random rnd = new Random();
+        int color = Color.argb(255, rnd.nextInt(256), 0, rnd.nextInt(256));
+
         Intent nameRequest = new Intent(context, WidgetIntentReceiver.class);
         nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
         nameRequest.setAction(WIDGET_INFO_GOTH);
@@ -120,12 +125,15 @@ public class CharacterWidget extends AppWidgetProvider {
             if (intent.hasExtra(PREV_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(PREV_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(PREV_HERO_NAME));
+                views.setTextColor(R.id.characterName, color);
             } else if (intent.hasExtra(NEXT_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(NEXT_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(NEXT_HERO_NAME));
+                views.setTextColor(R.id.characterName, color);
             } else if (intent.hasExtra(INSTANT_HERO_ID)) {
                 nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID, 0));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(INSTANT_HERO_NAME));
+                views.setTextColor(R.id.characterName, color);
             }
 
             PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
