@@ -49,7 +49,8 @@ public class CharacterModelImpl implements CharacterModel {
         String dataSource = preferences.getString(Constants.DATA_SOURCE_PREF, "remote");
         if (dataSource.equals("remote"))
             return getObservable(page, size).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-         else return getObservableCharactersList(context);
+         else
+             return getObservableCharactersList(context).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<List<Character>> getObservable(int page, int size) {
@@ -80,14 +81,10 @@ public class CharacterModelImpl implements CharacterModel {
 
     @Override
     public void saveListCharactersToDB(List<Character> list, Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        if(sp.getBoolean(Constants.IS_PERMANENT_SAVE_CHECKED, false)) {
             CharactersTable table = new CharactersTable();
             Observable<Integer> listObservable = table.getInsertListObservable(list);
             listObservable
                     .subscribeOn(Schedulers.io())
-                    .subscribe(integer -> CharacterWidget.updateWidget(context));
-
-        }
+                    .subscribe();
     }
 }

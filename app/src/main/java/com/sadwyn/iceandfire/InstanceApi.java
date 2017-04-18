@@ -2,6 +2,8 @@ package com.sadwyn.iceandfire;
 
 import com.sadwyn.iceandfire.network.Api;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -25,7 +27,7 @@ public final class InstanceApi {
                     .addInterceptor(logging)
                     .build();
         } else {
-            logger = new OkHttpClient.Builder()
+            logger = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.MINUTES)
                     .build();
         }
 
@@ -35,7 +37,6 @@ public final class InstanceApi {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
-        builder.client(logger);
 
         return builder.build().create(Api.class);
     }

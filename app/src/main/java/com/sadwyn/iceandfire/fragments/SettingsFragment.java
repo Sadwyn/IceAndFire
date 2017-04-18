@@ -155,4 +155,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         return false;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
+    }
 }

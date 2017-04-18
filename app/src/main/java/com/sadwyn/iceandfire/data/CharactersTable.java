@@ -3,6 +3,8 @@ package com.sadwyn.iceandfire.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Looper;
+import android.util.Log;
 
 import com.sadwyn.iceandfire.models.Character;
 
@@ -63,15 +65,13 @@ public class CharactersTable {
     public int saveCharactersListToDb(List<Character> list) {
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase();
         database.beginTransaction();
-        Iterator<Character> characterIterator = list.iterator();
 
-        while (characterIterator.hasNext()) {
-            Character character = characterIterator.next();
+        for (Character character : list) {
             if (!isHeroAlreadySaved(character, database)) {
                 makeTransaction(character, database);
             }
         }
-
+        Log.i("TAG", String.valueOf(Looper.myLooper() == Looper.getMainLooper()));
         database.setTransactionSuccessful();
         database.endTransaction();
         DatabaseManager.getInstance().closeDatabase();

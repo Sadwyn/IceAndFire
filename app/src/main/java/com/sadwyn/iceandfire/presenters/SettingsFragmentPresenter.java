@@ -66,6 +66,11 @@ public class SettingsFragmentPresenter extends BasePresenter {
     }
 
     @Override
+    public void onPause() {
+
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle bundle) {
 
     }

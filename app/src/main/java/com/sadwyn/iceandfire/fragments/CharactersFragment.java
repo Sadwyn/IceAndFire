@@ -87,7 +87,7 @@ public class CharactersFragment extends Fragment implements CharactersView {
         View view = inflater.inflate(R.layout.characters_fragment, container, false);
         if(getResources().getBoolean(R.bool.isDemoVersion)){
             AdView adView = (AdView)view.findViewById(R.id.adv_id);
-            AdRequest adRequest = new AdRequest.Builder().build();
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("0EA782B39B80C8279038659FEEEEEEF4").build();
             adView.loadAd(adRequest);
         }
         return view;
@@ -245,5 +245,11 @@ public class CharactersFragment extends Fragment implements CharactersView {
     public void showCharactersList(boolean isError) {
         adapter.setError(isError);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
     }
 }
