@@ -65,6 +65,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getComponentDagger().inject(this);
+        setHasOptionsMenu(true);
         addPreferencesFromResource(R.xml.preferences);
         setExportButtonPreference();
         setPermanentSaveCheckboxPreference();

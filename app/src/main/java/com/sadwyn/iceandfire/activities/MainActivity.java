@@ -8,19 +8,18 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.mikepenz.iconics.typeface.FontAwesome;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
@@ -30,10 +29,7 @@ import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
-import com.sadwyn.iceandfire.views.notifications.ExportDataNotification;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
-
-import org.parceler.Parcels;
 
 import java.util.Locale;
 
@@ -50,38 +46,65 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         ChangeLanguageCallBack,
         SourceChangeCallBack {
 
-    Drawer.Result drawer;
-    boolean doubleBackToExitPressedOnce = false;
 
+    boolean doubleBackToExitPressedOnce = false;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.left_drawer)
+    NavigationView navigationView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
         restoreSavedLocale();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        drawer = initializeDrawer(toolbar);
+        initializeDrawer();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
-
         if (fragment == null)
             replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
-        setSelectedItemInDrawer(fragment);
     }
 
-    private void setSelectedItemInDrawer(Fragment fragment) {
-        if(fragment == getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG))
-            drawer.setSelection(0);
-        else drawer.setSelection(1);
+    private void initializeDrawer() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG) ==
+                        getSupportFragmentManager().findFragmentById(R.id.fragContainer))) {
+                    getSupportFragmentManager().popBackStack();
+                    toggle.setDrawerIndicatorEnabled(true);
+                }
+                else {
+                   drawerLayout.openDrawer(3);
+                }
+            }
+        });
+        View header = View.inflate(getApplicationContext(), R.layout.drawer_header, null);
+        navigationView.addHeaderView(header);
+        navigationView.inflateMenu(R.menu.drawer_menu);
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            selectItem(item.getItemId());
+            drawerLayout.closeDrawer(3);
+            return true;
+        });
     }
+
 
     @Override
     public void onBackPressed() {
-        if (drawer != null && drawer.isDrawerOpen()) {
-            drawer.closeDrawer();
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(3)) {
+            drawerLayout.closeDrawer(3);
         } else if (getSupportFragmentManager().findFragmentById(R.id.fragContainer) ==
                 getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG)) {
             super.onBackPressed();
@@ -100,25 +123,15 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         }
     }
 
-    private Drawer.Result initializeDrawer(Toolbar toolbar) {
-        return new Drawer()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withActionBarDrawerToggle(true)
-                .withHeader(R.layout.drawer_header)
-                .withDrawerWidthDp(300)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_characters).withIdentifier(1).withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_settings).
-                                withIcon(FontAwesome.Icon.faw_wrench).withIdentifier(2)
-                )
-                .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
-                    if (position == 1) {
-                        replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG), true, CHARACTERS_FRAGMENT_TAG);
-                    } else if (position == 2) {
-                        replaceFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
-                    }
-                }).build();
+
+    private void selectItem(int id) {
+        if (id == R.id.character_item) {
+            replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG), true, CHARACTERS_FRAGMENT_TAG);
+            toggle.setDrawerIndicatorEnabled(true);
+        } else if (id == R.id.settings_item) {
+            toggle.setDrawerIndicatorEnabled(false);
+            replaceFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
+        }
     }
 
     @Override
@@ -138,7 +151,11 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putParcelable("DRAWER_RESULT", Parcels.wrap(drawer));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -176,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case REQUEST_FOR_WRITE_TO_CSV : {
+            case REQUEST_FOR_WRITE_TO_CSV: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ((SettingsFragment) getSupportFragmentManager()
                             .findFragmentByTag(SETTINGS_FRAGMENT_TAG)).exportDataAfterRequest();

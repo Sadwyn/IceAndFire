@@ -118,9 +118,6 @@ dependencies {
             {
                 transitive = true;
             }
-    compile('com.mikepenz.materialdrawer:library:0.9.5@aar') {
-        transitive = true
-    }
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile 'com.google.dagger:dagger:2.9'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
