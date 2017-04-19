@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity"
-            />
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
 
         <service android:name=".services.ExportDataService" />
 

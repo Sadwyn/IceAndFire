@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -66,6 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         super.onCreate(savedInstanceState);
         App.getComponentDagger().inject(this);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         addPreferencesFromResource(R.xml.preferences);
         setExportButtonPreference();
         setPermanentSaveCheckboxPreference();
@@ -161,4 +163,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         super.onPause();
         presenter.onPause();
     }
+
 }

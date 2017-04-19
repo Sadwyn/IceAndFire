@@ -3,20 +3,21 @@ package com.sadwyn.iceandfire.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         SourceChangeCallBack {
 
 
-    boolean doubleBackToExitPressedOnce = false;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.left_drawer)
@@ -62,77 +62,49 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        restoreSavedLocale();
         initializeDrawer();
+        restoreSavedLocale();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragContainer);
         if (fragment == null)
-            replaceFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
+            addFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
     }
 
     private void initializeDrawer() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        toggle.setToolbarNavigationClickListener(v -> {
+            toggle.setDrawerIndicatorEnabled(true);
+            onBackPressed();
+        });
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG) ==
-                        getSupportFragmentManager().findFragmentById(R.id.fragContainer))) {
-                    getSupportFragmentManager().popBackStack();
-                    toggle.setDrawerIndicatorEnabled(true);
-                }
-                else {
-                   drawerLayout.openDrawer(3);
-                }
-            }
-        });
+
         View header = View.inflate(getApplicationContext(), R.layout.drawer_header, null);
         navigationView.addHeaderView(header);
         navigationView.inflateMenu(R.menu.drawer_menu);
 
         navigationView.setNavigationItemSelectedListener(item -> {
             selectItem(item.getItemId());
-            drawerLayout.closeDrawer(3);
+            drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
     }
 
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout != null && drawerLayout.isDrawerOpen(3)) {
-            drawerLayout.closeDrawer(3);
-        } else if (getSupportFragmentManager().findFragmentById(R.id.fragContainer) ==
-                getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG)) {
-            super.onBackPressed();
-        } else {
-            if (doubleBackToExitPressedOnce) {
-                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory(Intent.CATEGORY_HOME);
-                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(homeIntent);
-            } else {
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-                new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
-            }
-        }
-    }
-
-
     private void selectItem(int id) {
-        if (id == R.id.character_item) {
-            replaceFragment(getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG), true, CHARACTERS_FRAGMENT_TAG);
-            toggle.setDrawerIndicatorEnabled(true);
-        } else if (id == R.id.settings_item) {
-            toggle.setDrawerIndicatorEnabled(false);
-            replaceFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
+        switch (id) {
+            case R.id.character_item:
+                toggle.setDrawerIndicatorEnabled(true);
+                changeFragment(CharactersFragment.newInstance(), true, CHARACTERS_FRAGMENT_TAG);
+                break;
+            case R.id.settings_item:
+                toggle.setDrawerIndicatorEnabled(false);
+                changeFragment(SettingsFragment.newInstance(), true, SETTINGS_FRAGMENT_TAG);
+                break;
         }
     }
+
 
     @Override
     public void onItemClick(Character character) {
@@ -140,7 +112,28 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         detailFragment.show(getSupportFragmentManager(), DETAIL_FRAGMENT_TAG);
     }
 
-    private void replaceFragment(Fragment fragment, boolean addToBackStack, String TAG) {
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentById(R.id.fragContainer)
+                != getSupportFragmentManager().findFragmentByTag(CHARACTERS_FRAGMENT_TAG))
+            toggle.setDrawerIndicatorEnabled(true);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+        else super.onBackPressed();
+    }
+
+    private void changeFragment(Fragment fragment, boolean addToBackStack, String TAG) {
+        FragmentManager manager = getSupportFragmentManager();
+        Log.i("CHANGE_FRAGMENT", fragment.toString());
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.replace(R.id.fragContainer, fragment, TAG);
+        if (addToBackStack) transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void addFragment(Fragment fragment, boolean addToBackStack, String TAG) {
+        Log.i("ADD_FRAGMENT", fragment.toString());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.replace(R.id.fragContainer, fragment, TAG);
@@ -149,13 +142,9 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -164,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
-
     }
 
     public void restoreSavedLocale() {
@@ -179,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         super.onDestroy();
         CharacterWidget.updateWidget(getApplicationContext());
     }
+
 
     @Override
     public void onSourceChanged() {

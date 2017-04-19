@@ -53,7 +53,6 @@ public class CharactersFragment extends Fragment implements CharactersView {
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
 
-
     @Inject
     public CharactersFragmentPresenter presenter;
 
@@ -66,8 +65,8 @@ public class CharactersFragment extends Fragment implements CharactersView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         if (presenterComponent == null) {
             presenterComponent = DaggerCharactersPresenterComponent.builder()
                     .charactersPresenterModule(new CharactersPresenterModule(getContext(), this)).build();
@@ -191,10 +190,10 @@ public class CharactersFragment extends Fragment implements CharactersView {
                 CardView cardView = (CardView)layout.getChildAt(0);
                 TextView textView = (TextView) cardView.getChildAt(0);
                 String name = textView.getText().toString();
-                model.deleteCharacterBySwipe(getContext().getApplicationContext(), name);
+                model.deleteCharacterBySwipe(getActivity().getApplicationContext(), name);
                 presenter.getList().remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-                CharacterWidget.updateWidget(getContext().getApplicationContext());
+                CharacterWidget.updateWidget(getActivity().getApplicationContext());
             }
 
             @Override

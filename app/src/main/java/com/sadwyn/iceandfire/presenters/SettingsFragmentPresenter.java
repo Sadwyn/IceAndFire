@@ -21,38 +21,20 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-
 public class SettingsFragmentPresenter extends BasePresenter {
     private Intent intent;
 
-    public void onExportButtonClick(Context context){
+    public void onExportButtonClick(Context context) {
         intent = new Intent(context, ExportDataService.class);
         ExportDataNotification notification = new ExportDataNotification(context);
         notification.showNotification();
-       Observer<List<Character>> observer =  new Observer<List<Character>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Character> value) {
-                intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(value));
-                context.startService(intent);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
         CharacterModelImpl model = CharacterModelImpl.getInstance();
-         Observable.defer(() -> model.getObservableCharactersList(context)).subscribeOn(Schedulers.io()).subscribe( observer);
+        Observable.defer(() -> model.getObservableCharactersList(context)).subscribeOn(Schedulers.io())
+                .doOnNext(characters -> {
+                    intent.putExtra(Constants.SEND_TO_SERVICE_KEY, Parcels.wrap(characters));
+                    context.startService(intent);
+                })
+                .subscribe();
     }
 
     @Override
