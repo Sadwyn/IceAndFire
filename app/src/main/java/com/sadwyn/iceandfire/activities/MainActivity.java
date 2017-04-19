@@ -108,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     @Override
     public void onItemClick(Character character) {
-        DetailFragment detailFragment = DetailFragment.newInstance(character);
+        CharactersFragment charactersFragment = ((CharactersFragment)getSupportFragmentManager()
+                .findFragmentByTag(CHARACTERS_FRAGMENT_TAG));
+
+        DetailFragment detailFragment = DetailFragment.newInstance(character, charactersFragment.getPresenter().getList());
         detailFragment.show(getSupportFragmentManager(), DETAIL_FRAGMENT_TAG);
     }
 

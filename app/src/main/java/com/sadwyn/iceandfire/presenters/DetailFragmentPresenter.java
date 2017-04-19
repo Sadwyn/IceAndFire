@@ -12,7 +12,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
+import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
+import com.sadwyn.iceandfire.fragments.SwipeCharacterCallback;
+import com.sadwyn.iceandfire.models.Character;
+import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.models.DetailBackgroundModelImpl;
+
+import java.util.List;
 
 import dagger.Module;
 import dagger.Provides;
@@ -21,12 +27,13 @@ public class DetailFragmentPresenter extends BasePresenter {
     private DetailBackgroundView detailBackgroundView;
     private Context detailFragmentContext;
     private DetailBackgroundModelImpl backgroundModel;
+    private SwipeCharacterCallback swipeCharacterCallback;
 
 
-
-    public DetailFragmentPresenter(Context context, DetailBackgroundView view) {
+    public DetailFragmentPresenter(Context context, DetailBackgroundView view, SwipeCharacterCallback swipeCallback) {
         this.detailBackgroundView = view;
         this.detailFragmentContext = context;
+        this.swipeCharacterCallback = swipeCallback;
         this.backgroundModel = new DetailBackgroundModelImpl(context);
     }
 
@@ -50,11 +57,21 @@ public class DetailFragmentPresenter extends BasePresenter {
 
     }
 
+    public void onSwipeRight(Character character, List<Character> characterList) {
+        if(characterList.indexOf(character)>0)
+        swipeCharacterCallback.updateCharacter(characterList.get(characterList.indexOf(character) - 1));
+    }
+
+    public void onSwipeLeft(Character character, List<Character> characterList) {
+        if(characterList.indexOf(character)<characterList.size()-1)
+        swipeCharacterCallback.updateCharacter(characterList.get(characterList.indexOf(character) + 1));
+    }
+
     private void loadBackgroundImage(Context context) {
         backgroundModel.getBackgroundImageRequest().listener(new RequestListener<String, GlideDrawable>() {
             @Override
             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-               Drawable drawable = (context.getResources().getDrawable(R.drawable.background));
+                Drawable drawable = (context.getResources().getDrawable(R.drawable.background));
                 detailBackgroundView.onSetBackground(drawable);
                 return false;
             }

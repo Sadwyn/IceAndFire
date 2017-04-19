@@ -6,6 +6,7 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 import com.sadwyn.iceandfire.components.ComponentDagger;
 import com.sadwyn.iceandfire.components.DaggerComponentDagger;
+
 import com.sadwyn.iceandfire.data.DatabaseManager;
 import com.sadwyn.iceandfire.data.HeroesDbHelper;
 import com.squareup.leakcanary.LeakCanary;

@@ -1,11 +1,11 @@
 package com.sadwyn.iceandfire.fragments;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,19 +16,26 @@ import android.widget.TextView;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
+import com.sadwyn.iceandfire.components.DaggerDetailsPresenterComponent;
+import com.sadwyn.iceandfire.components.DetailsPresenterComponent;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.models.CharacterModelImpl;
+import com.sadwyn.iceandfire.modules.DetailsPresenterModule;
 import com.sadwyn.iceandfire.presenters.DetailFragmentPresenter;
 import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 
 import org.parceler.Parcels;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTER_KEY;
 
-public class DetailFragment extends DialogFragment implements DetailBackgroundView {
+public class DetailFragment extends DialogFragment implements DetailBackgroundView, SwipeCharacterCallback {
 
     @BindView(R.id.detail_layout)
     PercentRelativeLayout detail_fragment_layout;
@@ -50,15 +57,34 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     TextView aliases;
 
     private Character character;
-    public DetailFragmentPresenter backgroundPresenter;
+    private List<Character> characterList;
+
+    DetailsPresenterComponent detailsPresenterComponent;
+    @Inject
+    public DetailFragmentPresenter detailFragmentPresenter;
+
+    public ContentFragmentCallback contentFragmentCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof MainActivity)
+            contentFragmentCallback = (ContentFragmentCallback) context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        backgroundPresenter =  new DetailFragmentPresenter(getActivity().getApplicationContext(), this);
+        if(detailsPresenterComponent != null){
+            detailsPresenterComponent = DaggerDetailsPresenterComponent.builder()
+                    .detailsPresenterModule(new DetailsPresenterModule(getContext(), this, this)).build();
+        }
+
+        detailFragmentPresenter = new DetailFragmentPresenter(getActivity().getApplicationContext(), this, this);
         if (getArguments() != null) {
             character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
+            characterList = Parcels.unwrap(getArguments().getParcelable("LIST_KEY"));
         }
     }
 
@@ -72,16 +98,39 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        backgroundPresenter.onViewCreated(view, savedInstanceState);
-        if (character != null) {
-            initializeData();
+
+        detailFragmentPresenter.onViewCreated(view, savedInstanceState);
+
+            initializeData(character);
             CharacterModelImpl model = CharacterModelImpl.getInstance();
             if (getActivity() instanceof MainActivity)
                 model.saveCharacterToDB(character, view.getContext());
-        }
+
+        view.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeRight() {
+                detailFragmentPresenter.onSwipeRight(character, characterList);
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                detailFragmentPresenter.onSwipeLeft(character, characterList);
+            }
+
+            @Override
+            public void onSwipeTop() {
+
+            }
+
+            @Override
+            public void onSwipeBottom() {
+
+            }
+        });
     }
 
-    private void initializeData() {
+
+    private void initializeData(Character character) {
         bornText.setText(getString(R.string.bornText, character.getBorn()));
         genderText.setText(getString(R.string.genderText, character.getGender()));
         cultureText.setText(getString(R.string.kingdomText, character.getCulture()));
@@ -101,6 +150,15 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
         super.onDestroyView();
     }
 
+    public static DetailFragment newInstance(Character character, List<Character> characterList) {
+        Bundle bundle = new Bundle();
+        DetailFragment detailFragment = new DetailFragment();
+        bundle.putParcelable("LIST_KEY", Parcels.wrap(characterList));
+        bundle.putParcelable(CHARACTER_KEY, Parcels.wrap(character));
+        detailFragment.setArguments(bundle);
+        return detailFragment;
+    }
+
     public static DetailFragment newInstance(Character character) {
         Bundle bundle = new Bundle();
         DetailFragment detailFragment = new DetailFragment();
@@ -112,5 +170,11 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     @Override
     public void onSetBackground(Drawable drawable) {
         detail_fragment_layout.setBackground(drawable);
+    }
+
+    @Override
+    public void updateCharacter(Character character) {
+        this.character = character;
+        initializeData(character);
     }
 }
