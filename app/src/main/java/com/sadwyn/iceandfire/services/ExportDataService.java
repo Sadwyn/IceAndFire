@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
-
 
 import com.csvreader.CsvWriter;
 import com.sadwyn.iceandfire.Constants;
@@ -22,14 +20,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import io.reactivex.Observable;
-
 import static com.sadwyn.iceandfire.Constants.CSV_EXPORT_NOTIFICATION_ID;
 
 
 public class ExportDataService extends IntentService {
 
-    public static final String TAG = "TAG";
 
     public ExportDataService(String name) {
         super(name);
@@ -42,7 +37,7 @@ public class ExportDataService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreateService");
+
     }
 
     @Override
@@ -55,7 +50,7 @@ public class ExportDataService extends IntentService {
         } catch (IOException e) {
             resultMessage = "Error on Saving";
         }
-        Log.i(TAG, "serviceGotInfo");
+
 
         String finalResultMessage = resultMessage;
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -70,7 +65,6 @@ public class ExportDataService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "OnDestroyService");
     }
 
 

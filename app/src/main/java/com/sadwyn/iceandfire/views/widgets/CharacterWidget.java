@@ -36,9 +36,14 @@ public class CharacterWidget extends AppWidgetProvider {
     public static ArrayList<Integer> charactersIds;
     public static int listSize;
 
+
+    public static void updateWidget(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        context.sendBroadcast(intent);
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
         WidgetHelper widgetHelper = new WidgetHelper();
         charactersIds = widgetHelper.getCharactersIds(context);
         if (charactersIds.size() != 0) {
@@ -76,9 +81,9 @@ public class CharacterWidget extends AppWidgetProvider {
         prevRequest.setAction(WIDGET_INFO_GOTH);
         nextRequest.setAction(WIDGET_INFO_GOTH);
 
-        PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, 0);
-        PendingIntent prevPending = PendingIntent.getBroadcast(context, 101, prevRequest, 0);
-        PendingIntent nextPending = PendingIntent.getBroadcast(context, 102, nextRequest, 0);
+        PendingIntent namePending = PendingIntent.getBroadcast(context.getApplicationContext(), 100, nameRequest, 0);
+        PendingIntent prevPending = PendingIntent.getBroadcast(context.getApplicationContext(), 101, prevRequest, 0);
+        PendingIntent nextPending = PendingIntent.getBroadcast(context.getApplicationContext(), 102, nextRequest, 0);
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.character_widget);
         views.setOnClickPendingIntent(R.id.characterName, namePending);
@@ -132,23 +137,18 @@ public class CharacterWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(NEXT_HERO_NAME));
                 views.setTextColor(R.id.characterName, color);
             } else if (intent.hasExtra(INSTANT_HERO_ID)) {
-                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID, 0));
+                nameRequest.putExtra(CURRENT_HERO_ID, intent.getIntExtra(INSTANT_HERO_ID, 1));
                 views.setTextViewText(R.id.characterName, intent.getStringExtra(INSTANT_HERO_NAME));
                 views.setTextColor(R.id.characterName, color);
             }
 
-            PendingIntent namePending = PendingIntent.getBroadcast(context, 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent namePending = PendingIntent.getBroadcast(context.getApplicationContext(), 100, nameRequest, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.characterName, namePending);
             appWidgetManager.updateAppWidget(appWidgetIds, views);
 
             if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE))
                 onUpdate(context, appWidgetManager, appWidgetIds);
         }
-    }
-
-    public static void updateWidget(Context context) {
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        context.sendBroadcast(intent);
     }
 }
 

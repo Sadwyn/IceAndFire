@@ -110,7 +110,7 @@ public class CharactersFragment extends Fragment implements CharactersView {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                adapter.setError(false);
+                adapter.setError(true);
                 return false;
             }
             @Override

@@ -51,6 +51,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/character_widget_info" />
         </receiver>
+
         <receiver android:name=".receivers.WidgetIntentReceiver">
             <intent-filter>
                 <action android:name="WIDGET_INFO_GOTH" />

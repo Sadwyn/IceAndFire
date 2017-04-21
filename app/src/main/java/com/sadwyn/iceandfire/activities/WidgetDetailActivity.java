@@ -34,6 +34,5 @@ public class WidgetDetailActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CharacterWidget.updateWidget(getApplicationContext());
     }
 }

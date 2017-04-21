@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,11 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
-import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.fragments.SettingsFragment;
 import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
 import com.sadwyn.iceandfire.fragments.ViewPagerFragment;
@@ -40,12 +37,11 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sadwyn.iceandfire.Constants.*;
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
-import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
 import static com.sadwyn.iceandfire.Constants.REQUEST_FOR_WRITE_TO_CSV;
 import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
+import static com.sadwyn.iceandfire.Constants.VIEW_PAGER_FRAGMENT_TAG;
 
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
@@ -71,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         if (fragment == null)
             addFragment(CharactersFragment.newInstance(), false, CHARACTERS_FRAGMENT_TAG);
     }
+
 
     private void initializeDrawer() {
         setSupportActionBar(toolbar);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
 
     @Override
     public void onItemClick(Character character) {
-        CharactersFragment charactersFragment = ((CharactersFragment)getSupportFragmentManager()
+        CharactersFragment charactersFragment = ((CharactersFragment) getSupportFragmentManager()
                 .findFragmentByTag(CHARACTERS_FRAGMENT_TAG));
 
         ViewPagerFragment pagerFragment = ViewPagerFragment.newInstance(character, charactersFragment.getPresenter().getList());
@@ -170,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CharacterWidget.updateWidget(getApplicationContext());
     }
 
 

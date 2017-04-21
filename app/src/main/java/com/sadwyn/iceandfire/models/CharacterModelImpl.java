@@ -63,7 +63,7 @@ public class CharacterModelImpl implements CharacterModel {
             Observable<Integer> oneHeroObservable = table.getInsertObservable(character);
             oneHeroObservable
                     .subscribeOn(Schedulers.io())
-                    .subscribe(integer -> CharacterWidget.updateWidget(context));
+                    .subscribe();
     }
 
     @Override
