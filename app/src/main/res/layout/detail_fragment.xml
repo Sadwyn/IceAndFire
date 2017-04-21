@@ -37,6 +37,7 @@
             app:layout_marginTopPercent="35%"
             app:layout_marginLeftPercent="5%"
             app:layout_marginRightPercent="5%"
+            android:clickable="true"
             android:layout_height="wrap_content"
             android:id="@+id/fatherText" />
 
@@ -45,6 +46,7 @@
             app:layout_marginTopPercent="45%"
             app:layout_marginLeftPercent="5%"
             app:layout_marginRightPercent="5%"
+            android:clickable="true"
             android:layout_height="wrap_content"
             android:id="@+id/motherText" />
 

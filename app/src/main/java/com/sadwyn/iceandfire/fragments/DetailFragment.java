@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sadwyn.iceandfire.App;
-import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -29,18 +27,21 @@ import com.sadwyn.iceandfire.views.adapters.DetailsAdapter;
 
 import org.parceler.Parcels;
 
-import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTER_KEY;
-import static com.sadwyn.iceandfire.Constants.LIST_KEY;
 
 public class DetailFragment extends Fragment implements DetailBackgroundView {
 
+    @Inject
+    public DetailFragmentPresenter detailFragmentPresenter;
+    public ContentFragmentCallback contentFragmentCallback;
     @BindView(R.id.detail_layout)
     PercentRelativeLayout detail_fragment_layout;
     @BindView(R.id.bornText)
@@ -61,10 +62,47 @@ public class DetailFragment extends Fragment implements DetailBackgroundView {
     TextView aliases;
 
     DetailsPresenterComponent detailsPresenterComponent;
-    @Inject
-    public DetailFragmentPresenter detailFragmentPresenter;
-    public ContentFragmentCallback contentFragmentCallback;
     Character character;
+    CharacterModelImpl model = CharacterModelImpl.getInstance();
+
+    public static DetailFragment newInstance(Character character) {
+        Bundle bundle = new Bundle();
+        DetailFragment detailFragment = new DetailFragment();
+        bundle.putParcelable(CHARACTER_KEY, Parcels.wrap(character));
+        detailFragment.setArguments(bundle);
+        return detailFragment;
+    }
+
+    @OnClick(R.id.fatherText)
+    public void fatherText(View view) {
+        getCharactersByUrl((TextView) view);
+    }
+
+
+
+    @OnClick(R.id.motherText)
+    public void motherText(View view) {
+        getCharactersByUrl((TextView) view);
+    }
+
+    public void getCharactersByUrl(TextView view) {
+        String url = view.getText().toString();
+        Pattern pattern = Pattern.compile("/");
+        String[] urlElements = pattern.split(url);
+        model.getCharacter(urlElements[urlElements.length - 1])
+                .subscribe(this::setCharacter, Throwable::printStackTrace);
+    }
+
+    public void setCharacter(Character characterFromApi) {
+        ViewPagerFragment vpFragment = (ViewPagerFragment) getParentFragment();
+        if (vpFragment.characterList.contains(characterFromApi)) {
+            vpFragment.viewPager.setCurrentItem(vpFragment.characterList.indexOf(characterFromApi));
+        } else {
+            vpFragment.characterList.add(characterFromApi);
+            vpFragment.adapter.notifyDataSetChanged();
+            vpFragment.viewPager.setCurrentItem(vpFragment.characterList.size() - 1);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -122,14 +160,6 @@ public class DetailFragment extends Fragment implements DetailBackgroundView {
         super.onDestroyView();
 
         App.getRefWatcher(getContext()).watch(this);
-    }
-
-    public static DetailFragment newInstance(Character character) {
-        Bundle bundle = new Bundle();
-        DetailFragment detailFragment = new DetailFragment();
-        bundle.putParcelable(CHARACTER_KEY, Parcels.wrap(character));
-        detailFragment.setArguments(bundle);
-        return detailFragment;
     }
 
     @Override

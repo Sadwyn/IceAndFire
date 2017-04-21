@@ -72,6 +72,9 @@ public class CharacterModelImpl implements CharacterModel {
         return Observable.just(charactersTable.getCharactersFromDB());
     }
 
+    public Observable<Character> getCharacter(String url){
+        return api.getCharacter(url).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
 
     @Override
     public void deleteCharacterBySwipe(Context context, String name) {

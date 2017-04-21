@@ -84,7 +84,7 @@ dependencies {
     ext.leekcanaryVersion = "1.5"
     ext.parcelerVersion = "1.1.6"
     ext.glideVersion = "3.7.0"
-    ext.logInterceptorVersion = "3.3.1"
+    ext.logInterceptorVersion = "3.4.1"
     ext.rxVersion = "2.0.1"
     ext.daggerVersion = "2.9"
 
