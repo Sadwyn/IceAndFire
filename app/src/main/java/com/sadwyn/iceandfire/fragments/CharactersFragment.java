@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.sadwyn.iceandfire.App;
 import com.sadwyn.iceandfire.CharactersView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -51,6 +52,8 @@ public class CharactersFragment extends Fragment implements CharactersView {
 
     @BindView(R.id.my_recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.adv_id)
+    AdView adView;
 
     @Inject
     public CharactersFragmentPresenter presenter;
@@ -65,7 +68,6 @@ public class CharactersFragment extends Fragment implements CharactersView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
         if (presenterComponent == null) {
             presenterComponent = DaggerCharactersPresenterComponent.builder()
                     .charactersPresenterModule(new CharactersPresenterModule(getContext(), this)).build();
@@ -83,8 +85,8 @@ public class CharactersFragment extends Fragment implements CharactersView {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.characters_fragment, container, false);
+        ButterKnife.bind(this, view);
         if(getResources().getBoolean(R.bool.isDemoVersion)){
-            AdView adView = (AdView)view.findViewById(R.id.adv_id);
             AdRequest adRequest = new AdRequest.Builder().addTestDevice("0EA782B39B80C8279038659FEEEEEEF4").build();
             adView.loadAd(adRequest);
         }
@@ -122,7 +124,6 @@ public class CharactersFragment extends Fragment implements CharactersView {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.bind(this, view);
         adapter = new CharactersAdapter(presenter.getList(), callback);
         presenter.onViewCreated(view, savedInstanceState);
 
@@ -217,6 +218,7 @@ public class CharactersFragment extends Fragment implements CharactersView {
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
+        adView.destroy();
         recyclerView.removeOnScrollListener(supportListener);
     }
 

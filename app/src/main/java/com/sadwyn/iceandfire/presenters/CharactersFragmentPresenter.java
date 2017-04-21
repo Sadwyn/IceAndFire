@@ -118,7 +118,7 @@ public class CharactersFragmentPresenter extends BasePresenter  {
         }
         list.addAll(set);
         set.clear();
-        characterFragmentView.showCharactersList(false);
+        characterFragmentView.showCharactersList(!sp.getString(Constants.DATA_SOURCE_PREF, "remote").equals("remote"));
         if(sp.getBoolean(Constants.IS_PERMANENT_SAVE_CHECKED, false))
         characterModel.saveListCharactersToDB(list,context);
     }

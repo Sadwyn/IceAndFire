@@ -1,74 +1,79 @@
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:id="@+id/detail_layout">
 
 
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="5%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/bornText"
-       />
-
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="15%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/cultureText" />
-
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="25%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/genderText" />
-
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="35%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/fatherText" />
-
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="45%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/motherText" />
-
-    <TextView
-        app:layout_widthPercent="100%"
-        app:layout_marginTopPercent="55%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/diedText" />
-    <TextView
-        app:layout_widthPercent="35%"
-        app:layout_marginTopPercent="65%"
-        app:layout_marginLeftPercent="5%"
-        app:layout_marginRightPercent="5%"
-        android:layout_height="wrap_content"
-        android:id="@+id/aliases" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/titles"
-        app:layout_marginTopPercent="65%"
-        app:layout_marginLeftPercent="45%"
-        app:layout_marginRightPercent="5%"
-        app:layout_widthPercent="40%"
-        app:layout_heightPercent="12%"/>
+    <android.support.percent.PercentRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/detail_layout">
 
 
-</android.support.percent.PercentRelativeLayout>
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="5%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/bornText"
+            />
+
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="15%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/cultureText" />
+
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="25%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/genderText" />
+
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="35%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/fatherText" />
+
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="45%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/motherText" />
+
+        <TextView
+            app:layout_widthPercent="100%"
+            app:layout_marginTopPercent="55%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/diedText" />
+        <TextView
+            app:layout_widthPercent="35%"
+            app:layout_marginTopPercent="65%"
+            app:layout_marginLeftPercent="5%"
+            app:layout_marginRightPercent="5%"
+            android:layout_height="wrap_content"
+            android:id="@+id/aliases" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/titles"
+            app:layout_marginTopPercent="65%"
+            app:layout_marginLeftPercent="45%"
+            app:layout_marginRightPercent="5%"
+            app:layout_widthPercent="40%"
+            app:layout_heightPercent="12%"/>
+
+
+    </android.support.percent.PercentRelativeLayout>
+
+
+

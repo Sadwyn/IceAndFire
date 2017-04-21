@@ -67,6 +67,7 @@ public class CharacterWidget extends AppWidgetProvider {
 
         instantIdRequest.putExtra(HERO_START_ID, charactersIds.get(currentListId - 1));
 
+
         nameRequest.putExtra(INCOMING_INTENT, HERO_DETAIL_REQUESTED);
         prevRequest.putExtra(INCOMING_INTENT, PREV_HERO_SWITCH);
         nextRequest.putExtra(INCOMING_INTENT, NEXT_HERO_SWITCH);

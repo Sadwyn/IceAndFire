@@ -81,11 +81,13 @@ dependencies {
     ext.supportVersion = "25.3.1"
     ext.retrofitVersion = "2.2.0"
     ext.butterKnifeVersion = "8.5.1"
+    ext.leekcanaryVersion = "1.5"
     ext.parcelerVersion = "1.1.6"
     ext.glideVersion = "3.7.0"
     ext.logInterceptorVersion = "3.3.1"
     ext.rxVersion = "2.0.1"
-    ext.daggerVersion = "2.0.1"
+    ext.daggerVersion = "2.9"
+
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -113,22 +115,24 @@ dependencies {
     compile "com.arello-mobile:moxy-android:$moxyVersion"
     compile "com.arello-mobile:moxy:$moxyVersion"
     provided "com.arello-mobile:moxy-compiler:$moxyVersion"
+    compile 'com.eftimoff:android-viewpager-transformers:1.0.1@aar'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar')
             {
                 transitive = true;
             }
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
-    compile 'com.google.dagger:dagger:2.9'
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-ads:10.2.1'
     testCompile 'junit:junit:4.12'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leekcanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leekcanaryVersion"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leekcanaryVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     provided 'javax.annotation:jsr250-api:1.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

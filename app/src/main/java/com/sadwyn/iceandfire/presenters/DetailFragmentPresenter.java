@@ -27,14 +27,12 @@ public class DetailFragmentPresenter extends BasePresenter {
     private DetailBackgroundView detailBackgroundView;
     private Context detailFragmentContext;
     private DetailBackgroundModelImpl backgroundModel;
-    private SwipeCharacterCallback swipeCharacterCallback;
 
 
-    public DetailFragmentPresenter(Context context, DetailBackgroundView view, SwipeCharacterCallback swipeCallback) {
+    public DetailFragmentPresenter(Context context, DetailBackgroundView view) {
         this.detailBackgroundView = view;
         this.detailFragmentContext = context;
-        this.swipeCharacterCallback = swipeCallback;
-        this.backgroundModel = new DetailBackgroundModelImpl(context);
+               this.backgroundModel = new DetailBackgroundModelImpl(context);
     }
 
     @Override
@@ -57,15 +55,6 @@ public class DetailFragmentPresenter extends BasePresenter {
 
     }
 
-    public void onSwipeRight(Character character, List<Character> characterList) {
-        if(characterList.indexOf(character)>0)
-        swipeCharacterCallback.updateCharacter(characterList.get(characterList.indexOf(character) - 1));
-    }
-
-    public void onSwipeLeft(Character character, List<Character> characterList) {
-        if(characterList.indexOf(character)<characterList.size()-1)
-        swipeCharacterCallback.updateCharacter(characterList.get(characterList.indexOf(character) + 1));
-    }
 
     private void loadBackgroundImage(Context context) {
         backgroundModel.getBackgroundImageRequest().listener(new RequestListener<String, GlideDrawable>() {

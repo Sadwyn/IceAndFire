@@ -14,16 +14,15 @@ import dagger.Provides;
 public class DetailsPresenterModule {
     private Context context;
     private DetailBackgroundView view;
-    private SwipeCharacterCallback swipeCallback;
 
-    public DetailsPresenterModule(Context context, DetailBackgroundView view, SwipeCharacterCallback swipeCallback) {
+    public DetailsPresenterModule(Context context, DetailBackgroundView view) {
         this.context = context;
         this.view = view;
-        this.swipeCallback = swipeCallback;
+
     }
 
     @Provides
     DetailFragmentPresenter providePresenter(){
-        return new DetailFragmentPresenter(context, view, swipeCallback);
+        return new DetailFragmentPresenter(context, view);
     }
 }

@@ -67,7 +67,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         super.onCreate(savedInstanceState);
         App.getComponentDagger().inject(this);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
         addPreferencesFromResource(R.xml.preferences);
         setExportButtonPreference();
         setPermanentSaveCheckboxPreference();
@@ -129,33 +128,39 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
     @Override
     public boolean onPreferenceTreeClick(Preference preference) {
         if (preference.getKey().equals(getString(R.string.languages_list_key))) {
-            ListPreference languagePreferences = (ListPreference) preference;
-            if (languagePreferences.getValue() == null)
-                languagePreferences.setValue(Locale.getDefault().getLanguage());
-
-            languagePreferences.setOnPreferenceChangeListener((preference1, newValue) -> {
-                if (!newValue.equals(languagePreferences.getValue())) {
-                    String lang = (String) newValue;
-                    Locale newLocale = new Locale(lang);
-                    LocaleUtils.setLocale(getContext(), newLocale);
-                    saveOneStringToPref(LANG_PREF, lang);
-                    callBack.changeLanguage();
-                }
-                return true;
-            });
+            changeLanguage((ListPreference) preference);
         } else if (preference.getKey().equals(getString(R.string.data_sources_key))) {
-            ListPreference dataSourcePreferences = (ListPreference) preference;
-            dataSourcePreferences.setOnPreferenceChangeListener((preference12, newValue) -> {
-                if (!newValue.equals(dataSourcePreferences.getValue())) {
-                    String sourceValue = (String) newValue;
-                    dataSourcePreferences.setValue((String) newValue);
-                    saveOneStringToPref(DATA_SOURCE_PREF, sourceValue);
-                    sourceChangeCallBack.onSourceChanged();
-                }
-                return false;
-            });
+            changeDataSource((ListPreference) preference);
         }
         return false;
+    }
+
+    public void changeLanguage(ListPreference preference) {
+        if (preference.getValue() == null)
+            preference.setValue(Locale.getDefault().getLanguage());
+
+        preference.setOnPreferenceChangeListener((preference1, newValue) -> {
+            if (!newValue.equals(preference.getValue())) {
+                String lang = (String) newValue;
+                Locale newLocale = new Locale(lang);
+                LocaleUtils.setLocale(getContext(), newLocale);
+                saveOneStringToPref(LANG_PREF, lang);
+                callBack.changeLanguage();
+            }
+            return true;
+        });
+    }
+
+    public void changeDataSource(ListPreference preference) {
+        preference.setOnPreferenceChangeListener((preference12, newValue) -> {
+            if (!newValue.equals(preference.getValue())) {
+                String sourceValue = (String) newValue;
+                preference.setValue((String) newValue);
+                saveOneStringToPref(DATA_SOURCE_PREF, sourceValue);
+                sourceChangeCallBack.onSourceChanged();
+            }
+            return false;
+        });
     }
 
     @Override
@@ -164,4 +169,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Activi
         presenter.onPause();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        App.getRefWatcher(getContext()).watch(this);
+    }
 }

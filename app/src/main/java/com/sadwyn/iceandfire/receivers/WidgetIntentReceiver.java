@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
 import com.sadwyn.iceandfire.Constants;
+import com.sadwyn.iceandfire.models.CharacterModel;
+import com.sadwyn.iceandfire.models.CharacterModelImpl;
 import com.sadwyn.iceandfire.views.widgets.WidgetHelper;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.views.widgets.CharacterWidget;
@@ -28,7 +30,6 @@ import static com.sadwyn.iceandfire.views.widgets.CharacterWidget.currentListId;
 
 
 public class WidgetIntentReceiver extends BroadcastReceiver {
-
     WidgetHelper provider = new WidgetHelper();
         public WidgetIntentReceiver() {}
 

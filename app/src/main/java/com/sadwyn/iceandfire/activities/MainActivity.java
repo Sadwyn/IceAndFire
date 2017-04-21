@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +22,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.fragments.CharactersFragment;
 import com.sadwyn.iceandfire.fragments.ContentFragmentCallback;
 import com.sadwyn.iceandfire.fragments.DetailFragment;
 import com.sadwyn.iceandfire.fragments.SettingsFragment;
 import com.sadwyn.iceandfire.fragments.SourceChangeCallBack;
+import com.sadwyn.iceandfire.fragments.ViewPagerFragment;
 import com.sadwyn.iceandfire.models.Character;
 import com.sadwyn.iceandfire.utils.ChangeLanguageCallBack;
 import com.sadwyn.iceandfire.utils.LocaleUtils;
@@ -37,6 +40,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sadwyn.iceandfire.Constants.*;
 import static com.sadwyn.iceandfire.Constants.CHARACTERS_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.DETAIL_FRAGMENT_TAG;
 import static com.sadwyn.iceandfire.Constants.LANG_PREF;
@@ -46,7 +50,6 @@ import static com.sadwyn.iceandfire.Constants.SETTINGS_FRAGMENT_TAG;
 public class MainActivity extends AppCompatActivity implements ContentFragmentCallback,
         ChangeLanguageCallBack,
         SourceChangeCallBack {
-
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -105,14 +108,13 @@ public class MainActivity extends AppCompatActivity implements ContentFragmentCa
         }
     }
 
-
     @Override
     public void onItemClick(Character character) {
         CharactersFragment charactersFragment = ((CharactersFragment)getSupportFragmentManager()
                 .findFragmentByTag(CHARACTERS_FRAGMENT_TAG));
 
-        DetailFragment detailFragment = DetailFragment.newInstance(character, charactersFragment.getPresenter().getList());
-        detailFragment.show(getSupportFragmentManager(), DETAIL_FRAGMENT_TAG);
+        ViewPagerFragment pagerFragment = ViewPagerFragment.newInstance(character, charactersFragment.getPresenter().getList());
+        pagerFragment.show(getSupportFragmentManager(), VIEW_PAGER_FRAGMENT_TAG);
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sadwyn.iceandfire.App;
+import com.sadwyn.iceandfire.Constants;
 import com.sadwyn.iceandfire.DetailBackgroundView;
 import com.sadwyn.iceandfire.R;
 import com.sadwyn.iceandfire.activities.MainActivity;
@@ -34,8 +37,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.sadwyn.iceandfire.Constants.CHARACTER_KEY;
+import static com.sadwyn.iceandfire.Constants.LIST_KEY;
 
-public class DetailFragment extends DialogFragment implements DetailBackgroundView, SwipeCharacterCallback {
+public class DetailFragment extends Fragment implements DetailBackgroundView {
 
     @BindView(R.id.detail_layout)
     PercentRelativeLayout detail_fragment_layout;
@@ -56,14 +60,11 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     @BindView(R.id.aliases)
     TextView aliases;
 
-    private Character character;
-    private List<Character> characterList;
-
     DetailsPresenterComponent detailsPresenterComponent;
     @Inject
     public DetailFragmentPresenter detailFragmentPresenter;
-
     public ContentFragmentCallback contentFragmentCallback;
+    Character character;
 
     @Override
     public void onAttach(Context context) {
@@ -74,18 +75,12 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        if(detailsPresenterComponent != null){
+        if (detailsPresenterComponent == null) {
             detailsPresenterComponent = DaggerDetailsPresenterComponent.builder()
-                    .detailsPresenterModule(new DetailsPresenterModule(getContext(), this, this)).build();
+                    .detailsPresenterModule(new DetailsPresenterModule(getContext(), this)).build();
         }
-
-        detailFragmentPresenter = new DetailFragmentPresenter(getActivity().getApplicationContext(), this, this);
-        if (getArguments() != null) {
-            character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
-            characterList = Parcels.unwrap(getArguments().getParcelable("LIST_KEY"));
-        }
+        detailsPresenterComponent.inject(this);
     }
 
     @Nullable
@@ -98,37 +93,14 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         detailFragmentPresenter.onViewCreated(view, savedInstanceState);
+        character = Parcels.unwrap(getArguments().getParcelable(CHARACTER_KEY));
+        initializeData(character);
+        CharacterModelImpl model = CharacterModelImpl.getInstance();
 
-            initializeData(character);
-            CharacterModelImpl model = CharacterModelImpl.getInstance();
-            if (getActivity() instanceof MainActivity)
-                model.saveCharacterToDB(character, view.getContext());
-
-        view.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeRight() {
-                detailFragmentPresenter.onSwipeRight(character, characterList);
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                detailFragmentPresenter.onSwipeLeft(character, characterList);
-            }
-
-            @Override
-            public void onSwipeTop() {
-
-            }
-
-            @Override
-            public void onSwipeBottom() {
-
-            }
-        });
+        if (getActivity() instanceof MainActivity)
+            model.saveCharacterToDB(character, view.getContext());
     }
-
 
     private void initializeData(Character character) {
         bornText.setText(getString(R.string.bornText, character.getBorn()));
@@ -148,15 +120,8 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
 
-    public static DetailFragment newInstance(Character character, List<Character> characterList) {
-        Bundle bundle = new Bundle();
-        DetailFragment detailFragment = new DetailFragment();
-        bundle.putParcelable("LIST_KEY", Parcels.wrap(characterList));
-        bundle.putParcelable(CHARACTER_KEY, Parcels.wrap(character));
-        detailFragment.setArguments(bundle);
-        return detailFragment;
+        App.getRefWatcher(getContext()).watch(this);
     }
 
     public static DetailFragment newInstance(Character character) {
@@ -170,11 +135,5 @@ public class DetailFragment extends DialogFragment implements DetailBackgroundVi
     @Override
     public void onSetBackground(Drawable drawable) {
         detail_fragment_layout.setBackground(drawable);
-    }
-
-    @Override
-    public void updateCharacter(Character character) {
-        this.character = character;
-        initializeData(character);
     }
 }
